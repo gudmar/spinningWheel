@@ -196,18 +196,14 @@ class SvgWheelCreator{
         let angle = (360 / stateItems.length)==360?359.999:360/stateItems.length;
         let {circleX, circleY, circleR} = this.state
 
-        
-        // console.log(tempColor)
-
         let addOneArc = function(item, index) {
-            let tempColor = colorIterator.next().value;
             let arc = this._createSVGArc({
                 x: circleX, 
                 y: circleY, 
                 radius: circleR, 
                 startAngle: index * angle,
                 endAngle: (index + 1) * angle,
-                colors: tempColor
+                colors: colorIterator.next().value
             })
 
             targetElement.appendChild(arc)

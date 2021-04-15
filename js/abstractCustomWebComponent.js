@@ -5,7 +5,6 @@ class AbstractComponent extends HTMLElement {
         this._switchContent(this._getTemplate(), sH)
         this._state = {}
         const observer = new MutationObserver(this._onInnerHTMLChange.bind(this)) //(this._onInnerHTMLChange.bind(this))
-        console.log(this)
         observer.observe(this, 
             {
                 subtree: true,
@@ -34,7 +33,6 @@ class AbstractComponent extends HTMLElement {
 
     _onInnerHTMLChange() {
         // try {
-            console.log('dupa')
             this.content.innerHTML = this.innerHTML
         // } catch (e) {
         //     // expected - at this moment modalMessageHolder is null;

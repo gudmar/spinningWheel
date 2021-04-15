@@ -21,9 +21,9 @@ class SvgWheelCreator{
         if (this.state == undefined) {
             this.state = {}
         }
-        if (this.state.width == undefined) {this.state.width = this._getDescriptorOrDerault(width, '500px')}
-        if (this.state.height == undefined) {this.state.height = this._getDescriptorOrDerault(height, '500px')}
-        if (this.state.viewBox == undefined) {this.state.viewBox = this._getDescriptorOrDerault(viewBox, '0 0 500 500')}
+        if (this.state.width == undefined) {this.state.width = this._getDescriptorOrDerault(width, '900px')}
+        if (this.state.height == undefined) {this.state.height = this._getDescriptorOrDerault(height, '900px')}
+        if (this.state.viewBox == undefined) {this.state.viewBox = this._getDescriptorOrDerault(viewBox, '0 0 800 800')}
         this.state.circleX = (parseFloat(this.state.width) / 2) + '';
         this.state.circleY = (parseFloat(this.state.height) / 2) + '';
         this.state.circleR = (Math.min(parseFloat(this.state.width), parseFloat(this.state.height)) / 2.8) + '';
@@ -31,9 +31,6 @@ class SvgWheelCreator{
 
     _setNSAttributeToElement(element, descriptor){
         for (let field in descriptor) {
-            if (field == 'd') {
-                // console.log(descriptor.d)
-            }
             element.setAttributeNS(null, field, descriptor[field])
         }
     }
@@ -131,8 +128,6 @@ class SvgWheelCreator{
             return d;
         }.bind(this); //x, y, radius, startAngle, endAngle
 
-        console.log(ColorGenerator.toString(colors.bg))
-        console.log(colors.bg)
         let pathDescriptor = {
             'd': describeArc(), 
             'stroke': 'black',
@@ -166,16 +161,27 @@ class SvgWheelCreator{
         let {circleX, circleY, circleR} = this.state;
         let angle = 360 / listOfDescriptors.length;
         let newLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        let position = this._polarToCartesian(parseFloat(circleX), parseFloat(circleY), parseFloat(circleR) * 0.4, angle * (0.5 + index) +10);
+        let positionCounter = function(factor) {
+            const VARIABLE = 0.4;
+            if (index == 0) {
+                console.warn('this VARIABLE is to be parametrized, or alg. needs to be changed. VARIABLE is better smaller for bigger wheels or more inputs')
+            }
+            return this._polarToCartesian(parseFloat(circleX), parseFloat(circleY), parseFloat(circleR) * factor, angle * (VARIABLE + index) +10);
+        }.bind(this)
+        let position = label.length < 4 ? positionCounter(0.4) : positionCounter(0.3);
+        
         let labelDescriptor = {
             'fill': fgColor,
             'font-family': 'Arial, Helvetica, sans-serif',
             'font-weight': 'bold',
             'x': position.x + '',
             'y': position.y + '',
-            'transfrom': `rotate(${angle * (0.5 + index) - 90}, ${position.x}, ${position.y})`,
-            'font-size': label < 4 ? '35' : '25'
+            'transform': `rotate(${angle* (0.5 + index) - 90}, ${position.x}, ${position.y})`, 
+            
+            'font-size': label.length < 4 ? '35' : '25'
         }
+        // * (0.5 + index) - 90}, {position.x}, {position.y})`,
+        newLabel.appendChild(document.createTextNode(label));
         this._setNSAttributeToElement(newLabel, labelDescriptor)
         // newLabel.setAttributeNS(null, 'fill', fgColor)
         // newLabel.setAttributeNS(null, 'font-family', 'Arial, Helvetica, sans-serif')
@@ -190,6 +196,7 @@ class SvgWheelCreator{
 
     _devideCircleIntoArcs(stateItems) {
         let gen = new ColorGenerator(stateItems.length);
+        let generatedColors = gen.createListOfColors();
         // let targetCircle = this.template.querySelector('circle')
         let targetElement = this.template.querySelector('g')
         let colorIterator = gen.createIterator()
@@ -203,7 +210,7 @@ class SvgWheelCreator{
                 radius: circleR, 
                 startAngle: index * angle,
                 endAngle: (index + 1) * angle,
-                colors: colorIterator.next().value
+                colors: generatedColors[index]
             })
 
             targetElement.appendChild(arc)
@@ -213,11 +220,15 @@ class SvgWheelCreator{
         stateItems.forEach( (item, index) => {
             addOneArc(item, index)
         });
-        this._placeLabels('labels');
+        stateItems.forEach((item, index) => {
+            item.fgColor = ColorGenerator.toString(generatedColors[index].fg);
+            item.bgColor = ColorGenerator.toString(generatedColors[index].bg);
+        })
+        this._placeLabels(stateItems, generatedColors);
     }
 
 
-    _placeLabels(stateItems){
+    _placeLabels(stateItems, arrayWithColorObjects){
         for (let i = 0; i < stateItems.length; i++){
             this._placeSingleLabel(stateItems, i)
         }

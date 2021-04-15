@@ -41,7 +41,11 @@ class ColorGenerator{
         let nextIndex = -1;
         return {
             next: function () {
-                nextIndex = nextIndex + 1 >= arrayOfColors.length ? 0 : nextIndex + 1;
+                if (nextIndex >= arrayOfColors.length) {
+                    nextIndex = 0
+                } else {
+                    nextIndex = nextIndex + 1;
+                } 
                 return {
                     value: arrayOfColors[nextIndex],
                     done: false

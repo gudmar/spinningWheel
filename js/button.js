@@ -11,7 +11,7 @@ class CustomButton extends AbstractComponent{
     }
 
     _onInnerHTMLChange(){
-        console.log(this)
+        
     }
 
 
@@ -46,10 +46,10 @@ class CustomButton extends AbstractComponent{
 
 
     connectedCallback() {
-        let cb = function (){
-            this.innerHTML = "Content"
-        }.bind(this)
-        setTimeout(cb, 700)
+        // let cb = function (){
+        //     this.innerHTML = "Content"
+        // }.bind(this)
+        // setTimeout(cb, 700)
     }
     _changeButtonToBig() {
         this.shadowRoot.querySelector('.button').classList.remove('button-min')

@@ -1,0 +1,33 @@
+body{
+    background-color: rgb(220, 220, 220)
+}
+
+.wrapper{
+    flex-wrap: wrap;
+}
+.center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+.top{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    align-content: flex-start;
+}
+.left{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+.justify{
+    text-align: justify;
+}
+.column{
+    flex-direction: column;
+}
+.row{
+    flex-direction: row;
+}

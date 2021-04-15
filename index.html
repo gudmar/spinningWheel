@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Spinning wheel</title>
+
+    <link rel="stylesheet" href="./css/index.css">
+
+    <script src="./js/abstractCustomWebComponent.js" defer></script>
+    <script src="./js/showHideButton.js" defer></script>
+    <script src="./js/button.js" defer></script>
+    <script src="./js/modal.js" defer></script>
+    <script src="./js/colorGenerator.js" defer></script>
+    <script src="./js/colorPresenter.js" defer></script>
+    <script src="./js/stateHandlingAbstractComponent.js" defer></script>
+    <script src="./js/wheelDrawer.js" defer></script>
+    <script src="./js/spinningWheelComponent.js" defer></script>
+
+</head>
+<body>
+    <hidable-modal id = "modal-1"><color-presenter></color-presenter></hidable-modal>
+    <div id="color-samples center top">
+        <custom-button data-label="Present colors" value="show" onClick="showModal()"></custom-button>
+    </div>
+    <spinning-wheel>
+        <ul>
+            <li>Option 1</li>
+            <li>2</li>
+            <li>Option 3</li>
+            <li>4</li>
+            <li>Option 5</li>
+        </ul>
+    </spinning-wheel>
+
+
+    <script>
+        function showModal(){
+            document.getElementById('modal-1').setAttribute('data-visible', true)
+        }
+    </script>
+    
+</body>
+</html>

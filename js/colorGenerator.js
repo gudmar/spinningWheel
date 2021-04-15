@@ -38,10 +38,18 @@ class ColorGenerator{
 
     createIterator(arrayOfColors = this.createListOfColors()) {
         // if createListOfColorsAsString passed then this will generate strig represintations
+        console.log(arrayOfColors)
         let nextIndex = -1;
         return {
             next: function () {
-                nextIndex = nextIndex + 1 >= arrayOfColors.length ? 0 : nextIndex + 1;
+                console.log(arrayOfColors.length)
+                if (nextIndex >= arrayOfColors.length) {
+                    nextIndex = 0
+                } else {
+                    nextIndex = nextIndex + 1;
+                    console.log(nextIndex)
+                } 
+                console.log(nextIndex)
                 return {
                     value: arrayOfColors[nextIndex],
                     done: false

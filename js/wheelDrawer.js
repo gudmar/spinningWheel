@@ -32,7 +32,7 @@ class SvgWheelCreator{
     _setNSAttributeToElement(element, descriptor){
         for (let field in descriptor) {
             if (field == 'd') {
-                console.log(descriptor.d)
+                // console.log(descriptor.d)
             }
             element.setAttributeNS(null, field, descriptor[field])
         }
@@ -55,7 +55,6 @@ class SvgWheelCreator{
     _createCircle() {
         let circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         let g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        console.log(this.state)
         let circleDescriptor = {
             'cx': this.state.circleX,
             'cy': this.state.circleY,
@@ -81,7 +80,6 @@ class SvgWheelCreator{
         svg.appendChild(this._createCircle());
         this.template.appendChild(svg)
         this._devideCircleIntoArcs(stateItems);
-        console.log(this.template.querySelector('svg'))
         return this.template.querySelector('svg')
 
     }
@@ -111,9 +109,8 @@ class SvgWheelCreator{
         };
     }    
 
-    _createSVGArc(descriptor, fill = 'none'){
-        let {x, y, radius, startAngle, endAngle} = descriptor;
-        console.log(descriptor)
+    _createSVGArc(descriptor){
+        let {x, y, radius, startAngle, endAngle, colors} = descriptor;
         // ([x, y, radius, startAngle, endAngle].forEach((item) => {item = parseFloat(item)}))
         let roundDown = function(nrToRound, precision = 2){
             let multiplicator = Math.pow(10, precision);
@@ -124,10 +121,6 @@ class SvgWheelCreator{
         let describeArc = function () {
             let start = this._polarToCartesian(x, y, radius, endAngle);
             let end = this._polarToCartesian(x, y, radius, startAngle);
-            
-            console.log(x); 
-            console.log(radius), 
-            console.log(startAngle)
             let largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
             let d = [
                 "M", roundDown(x), roundDown(y),
@@ -137,12 +130,15 @@ class SvgWheelCreator{
             ].join(" ");
             return d;
         }.bind(this); //x, y, radius, startAngle, endAngle
+
+        console.log(ColorGenerator.toString(colors.bg))
+        console.log(colors.bg)
         let pathDescriptor = {
             'd': describeArc(), 
             'stroke': 'black',
             'stroke-width': '1',
             'stroke-linecap': 'round',
-            'fill': fill,
+            'fill': ColorGenerator.toString(colors.bg),
             'transform-box': 'fill-box'
         }
 
@@ -194,22 +190,24 @@ class SvgWheelCreator{
 
     _devideCircleIntoArcs(stateItems) {
         let gen = new ColorGenerator(stateItems.length);
-        console.log(this.template)
         // let targetCircle = this.template.querySelector('circle')
         let targetElement = this.template.querySelector('g')
         let colorIterator = gen.createIterator()
         let angle = (360 / stateItems.length)==360?359.999:360/stateItems.length;
-        console.log(360 / stateItems.length)
-        console.log(angle)
         let {circleX, circleY, circleR} = this.state
+
+        
+        // console.log(tempColor)
+
         let addOneArc = function(item, index) {
-            console.log(index)
+            let tempColor = colorIterator.next().value;
             let arc = this._createSVGArc({
                 x: circleX, 
                 y: circleY, 
                 radius: circleR, 
                 startAngle: index * angle,
-                endAngle: (index + 1) * angle
+                endAngle: (index + 1) * angle,
+                colors: tempColor
             })
 
             targetElement.appendChild(arc)

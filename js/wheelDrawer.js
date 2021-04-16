@@ -1,6 +1,6 @@
 class SvgWheelCreator{
-    constructor(sizeDescriptor){
-        this._setState(sizeDescriptor);
+    constructor(diameter){
+        this._setState(diameter);
         this.template = document.createElement('template')
         this.circleGroupSelector = 'spinCircleGroupId'
         this.colorGenerator = new ColorGenerator()
@@ -11,22 +11,14 @@ class SvgWheelCreator{
     }
 
 
-    _setState(sizeDescriptor){
-        let width = undefined;
-        let height = undefined;
-        let viewBox = undefined;
-        if (sizeDescriptor != undefined) {
-            ({width, height, viewBox} = sizeDescriptor)
-        }
+    _setState(diameter = 600){
         if (this.state == undefined) {
             this.state = {}
         }
-        if (this.state.width == undefined) {this.state.width = this._getDescriptorOrDerault(width, '900px')}
-        if (this.state.height == undefined) {this.state.height = this._getDescriptorOrDerault(height, '900px')}
-        if (this.state.viewBox == undefined) {this.state.viewBox = this._getDescriptorOrDerault(viewBox, '0 0 800 800')}
+        [this.state.width, this.state.height, this.state.viewBox] = [diameter, diameter, `0 0 ${diameter} ${diameter}`]
         this.state.circleX = (parseFloat(this.state.width) / 2) + '';
         this.state.circleY = (parseFloat(this.state.height) / 2) + '';
-        this.state.circleR = (Math.min(parseFloat(this.state.width), parseFloat(this.state.height)) / 2.8) + '';
+        this.state.circleR = (Math.min(parseFloat(this.state.width), parseFloat(this.state.height)) / 2.05) + '';
     }
 
     _setNSAttributeToElement(element, descriptor){

@@ -21,9 +21,6 @@ class SpinningWheelComponent extends StateHandlingAbstractComponent{
         // console.log(this._getWheelCreator().createSpinCircleElement(this._getState()))
         let output = `
             <style>
-            :host{
-                display: inline-block;
-            }
                 .center{
                     display: flex;
                     justify-content: center;

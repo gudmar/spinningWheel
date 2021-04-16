@@ -53,12 +53,6 @@ class ShowHideButton extends HTMLElement{
     _getTemplate(){
         return `
             <style>
-            :host{
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                position: absolute;
-            }
             .button{
                 display: flex;
                 justify-content: center;

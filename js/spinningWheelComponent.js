@@ -26,6 +26,7 @@ class SpinningWheelComponent extends StateHandlingAbstractComponent{
     async _resolveAnimation(cb) {
         let log = function(message) {
             console.log(message)
+            console.log(`And the winner is: ${this._getWinner(message)}`)
         }.bind(this)
 
         let promiseCB = async function(resolve, reject){
@@ -34,6 +35,15 @@ class SpinningWheelComponent extends StateHandlingAbstractComponent{
         }.bind(this)
 
         return new Promise(promiseCB)
+    }
+
+    _getWinner(totalAngle) {
+        let itemList = this._getState();
+        let nrOfCircleItemsInSingleCircle = itemList.length;
+        let angleOfEachCirclePart = 360 / nrOfCircleItemsInSingleCircle;
+        let nrOfCirclePartsFromSpinning = Math.floor(totalAngle / angleOfEachCirclePart)
+        let winnerIndex = nrOfCirclePartsFromSpinning % nrOfCircleItemsInSingleCircle;
+        return itemList[itemList.length - 1 - winnerIndex].label
     }
 
     _animate() {

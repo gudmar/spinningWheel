@@ -35,3 +35,6 @@ body{
 .row{
     flex-direction: row;
 }
+custom-button{
+    margin: 0.5rem;
+}

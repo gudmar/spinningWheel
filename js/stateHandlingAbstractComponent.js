@@ -56,7 +56,7 @@ class StateHandlingAbstractComponent extends AbstractComponent{
             output += `<li ${item.isHidden?'class = "hidden"':''}>${item.label}</li>`
         })
         this._removeElement(this.querySelector('ul'));
-        this.appendChild(this._stringToElement(`<ul>${output}</ul>`))
+        this.appendChild(this._stringToElement(`<ul>${output}</ul>`)) 
     }
 
 

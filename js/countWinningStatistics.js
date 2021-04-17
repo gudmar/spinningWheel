@@ -275,6 +275,7 @@ class WinningElementStatisticsCounter extends AbstractComponent{
                 height: 1.3rem;
                 border: solid black thin;
                 border-radius: 5px;
+                background-color: white;
                 transition: 250ms;
             }
             .not-valid:after{

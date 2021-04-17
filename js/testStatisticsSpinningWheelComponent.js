@@ -1,9 +1,9 @@
-class SpinningWheelComponent extends StateHandlingAbstractComponent{
+class SpinningWheelComponent_testVersion extends StateHandlingAbstractComponent{
 
     constructor(){
-        super()
+            super()
         this.animationSettings = {
-            interval: 1,
+            interval: 0,
             angle: 30,
             angleIncrement: 20,
             deltaAngle: function() {return Math.random() * 30 + 30},
@@ -12,6 +12,12 @@ class SpinningWheelComponent extends StateHandlingAbstractComponent{
             animationRejectAfterSeconds: 10
         }
         this.diameter = 600;
+
+
+        let animation = this._resolveAnimation.bind(this)
+        this.shadowRoot.querySelector('.wrapper').appendChild(this._getWheelCreator().createSpinCircleElement(this._getState()))
+        this.objectToSpin = this.shadowRoot.querySelector('g')
+        this.objectToSpin.addEventListener('click', animation)
     }
 
     connectedCallback(){
@@ -70,33 +76,25 @@ class SpinningWheelComponent extends StateHandlingAbstractComponent{
         let radius = this.diameter/2;
         let movedObject = this.objectToSpin;
         deltaAngle = deltaAngle();
-        let singleAnimationFrame = function() {
-            movedObject.setAttributeNS(null, 'transform', `rotate(${angle}, ${radius}, ${radius})`);
-            if (deltaAngle > 1) {
-                angle += deltaAngle;
-                deltaAngle *= 0.99;
-            } else {
-                return new Promise((resolve, reject) => {
-                    resolve(angle)
-                })
-            }
-        }
+
 
         return (async function() {
             let inter
             let _angle = angle;
             let _deltaAngle = deltaAngle;
             let promiseAnimate = new Promise((resolve, reject) => {
-                inter = setInterval(function () {
                     movedObject.setAttributeNS(null, 'transform', `rotate(${_angle}, ${radius}, ${radius})`);
-                    if (deltaAngle > 1) {
-                        _angle += deltaAngle;
-                        deltaAngle *= 0.99;
-                    } else {
-                        clearInterval(inter)
-                        resolve(_angle)
+                    console.log(_deltaAngle)
+                    let isResolved = false;
+                    while(!isResolved){
+                        if (_deltaAngle > 1) {
+                            _angle += _deltaAngle;
+                            _deltaAngle *= 0.99;
+                        } else {
+                            isResolved = true
+                            resolve(_angle)
+                        }
                     }
-                }.bind(this, resolve), inter)
             }
         )
             let promiseRejectAnimation = new Promise((resolve, reject) => {
@@ -149,6 +147,18 @@ class SpinningWheelComponent extends StateHandlingAbstractComponent{
         this.objectToSpin.dispatchEvent(ev);
     }
 
+    setNrOfWheelItems(nr) {
+        let createDummyLi = function(nr){
+            let output = '';
+            for (let i = 0; i < nr; i++){
+                output = output + `<li>${i}</li>`
+            }
+            return output;
+        }
+        let listToAdd = this._stringToElement(`<ul>${createDummyLi(nr)}</ul>`)
+        this.appendChild(listToAdd)
+    }
+
 }
 
-window.customElements.define('spinning-wheel', SpinningWheelComponent)
+window.customElements.define('test-spinning-wheel', SpinningWheelComponent_testVersion)

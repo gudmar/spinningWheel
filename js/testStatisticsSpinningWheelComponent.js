@@ -15,7 +15,7 @@ class SpinningWheelComponent_testVersion extends StateHandlingAbstractComponent{
 
 
         let animation = this._resolveAnimation.bind(this)
-        this.shadowRoot.querySelector('.wrapper').appendChild(this._getWheelCreator().createSpinCircleElement(this._getState()))
+        this.shadowRoot.querySelector('.wrapper').appendChild(this._getWheelCreator().createSpinCircleElement(this._getState().items))
         this.objectToSpin = this.shadowRoot.querySelector('g')
         this.objectToSpin.addEventListener('click', animation)
     }
@@ -23,7 +23,7 @@ class SpinningWheelComponent_testVersion extends StateHandlingAbstractComponent{
     connectedCallback(){
         // let animation = this._animate.bind(this)
         let animation = this._resolveAnimation.bind(this)
-        this.shadowRoot.querySelector('.wrapper').appendChild(this._getWheelCreator().createSpinCircleElement(this._getState()))
+        this.shadowRoot.querySelector('.wrapper').appendChild(this._getWheelCreator().createSpinCircleElement(this._getState().items))
         this.objectToSpin = this.shadowRoot.querySelector('g')
         this.objectToSpin.addEventListener('click', animation)
 
@@ -53,11 +53,11 @@ class SpinningWheelComponent_testVersion extends StateHandlingAbstractComponent{
     }
 
     _getWinner(totalAngle) {
-        let itemList = this._getState();
+        let itemList = this._getState().items;
         return itemList[this._getWinnerIndex(totalAngle)].label
     }
     _getWinnerIndex(totalAngle) {
-        let itemList = this._getState();
+        let itemList = this._getState().items;
         let nrOfCircleItemsInSingleCircle = itemList.length;
         let angleOfEachCirclePart = 360 / nrOfCircleItemsInSingleCircle;
         let nrOfCirclePartsFromSpinning = Math.floor(totalAngle / angleOfEachCirclePart)

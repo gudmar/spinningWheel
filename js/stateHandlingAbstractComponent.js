@@ -10,7 +10,7 @@ class StateHandlingAbstractComponent extends AbstractComponent{
             this._state = {}
         }
         if (this._state.items == undefined) {
-            this._state = this._getListOfEntriesFromInnerHTML();
+            this._state.items = this._getListOfEntriesFromInnerHTML();
         }
         return this._state
     }
@@ -45,7 +45,7 @@ class StateHandlingAbstractComponent extends AbstractComponent{
     }
 
     _recreateThisComponent() {
-        throw new ReferenceError(`${this.constructor}: _recreateThisComponent needs to be overwritten`)
+        console.warn(`${this.constructor.name}: _recreateThisComponent needs to be overwritten`)
     }
 
     _updateInnerHTML(stateItems){

@@ -17,15 +17,18 @@ class Modal extends AbstractComponent{
                 switch (key) {
                     case 'visible':
                         if (!val) {
+                            obj[key] = val;
                             this.setAttribute('data-visible', false)
                             this._hide()
                         } else {
+                            obj[key] = val;
                             this.setAttribute('data-visible', true)
                             this.show()
                         }
                         break;
+                    default:
+                            obj[key] = val;
                 }
-                obj[key] = val;
                 console.log(key)
                 console.log(obj[key])
                 return true;

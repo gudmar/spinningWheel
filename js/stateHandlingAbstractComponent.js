@@ -38,10 +38,12 @@ class StateHandlingAbstractComponent extends AbstractComponent{
     _onStateChange(){
         let newStateItems = this._copyArrayOfObjects(this._getState().items)
         let oldStateItems = this._getListOfEntriesFromInnerHTML()
-        if (!Comparator.areStatesEqual(oldSateItmes, newStateItems)){
+        if (!Comparator.areStatesEqual(oldStateItems, newStateItems)){
             this._updateInnerHTML(newStateItems)
+            this._state.items = []
+            this._state.items = newStateItems.map(item => item);
             this._recreateThisComponent();
-        }       
+        }     
     }
 
     _recreateThisComponent() {
@@ -91,18 +93,19 @@ class StateHandlingAbstractComponent extends AbstractComponent{
     }
 
     _changeItemInStateItems(itemId, key, value){
-        let newStateItems = this._copyArrayOfObjects(this._state);
+        let newStateItems = this._copyArrayOfObjects(this._state.items);
         let getIndexOfElementToChange = function(){
-            return newStateItems.findIndex((element)=>{
+            return newStateItems.findIndex((element, index)=>{
                 return element.id == itemId;
             } )
         }
         let prepareNewState = function(){
             newStateItems[getIndexOfElementToChange()][key] = value;
         }
+        prepareNewState()
         this._state.items = newStateItems;
-        this._onStateChange();
-        // this._recreateThisComponent();
+        // this._onStateChange();
+        this._recreateThisComponent();
     }
 
     

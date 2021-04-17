@@ -15,12 +15,21 @@ class SpinningWheelComponent extends StateHandlingAbstractComponent{
     }
 
     connectedCallback(){
-        // let animation = this._animate.bind(this)
+        this._addSpinningWheel();
+    }
+
+    _addSpinningWheel(newStateItems = this._getStateNotHiddenItems()){
         let animation = this._resolveAnimation.bind(this)
-        this.shadowRoot.querySelector('.wrapper').appendChild(this._getWheelCreator().createSpinCircleElement(this._getState().items))
+        this.shadowRoot.querySelector('.wrapper').appendChild(this._getWheelCreator().createSpinCircleElement(this._getStateNotHiddenItems(newStateItems)))
         this.objectToSpin = this.shadowRoot.querySelector('g')
         this.objectToSpin.addEventListener('click', animation)
+    }
 
+    _getStateNotHiddenItems(){
+        let output = this._getState().items.filter((element, index) => {
+            return element.isHidden == true ? false : true
+        })
+        return output
     }
 
     async _resolveAnimation(cb) {
@@ -35,28 +44,35 @@ class SpinningWheelComponent extends StateHandlingAbstractComponent{
         }.bind(this)
         let log = function(message) {
             console.log(message)
-            console.log(`And the winner is: ${this._getWinner(message)}`)
+            console.log(`And the winner is: ${this._getWinner(message).label}`)
         }.bind(this)
         let outputWinnerIndex = function(winnerIndex) {
             setParameterOnAnimationEnd(winnerIndex)
             emitOnAnimationEnd(winnerIndex)
         }.bind(this)
+        let hideWinner = function(winner){
+            this._changeItemInStateItems(winner.id, 'isHidden', true)
+        }.bind(this)
 
         let promiseCB = async function(resolve, reject){
             let angle = await this._animate();
             log(angle)
-            outputWinnerIndex(this._getWinnerIndex(angle))
+            let winner = this._getWinner(angle)
+            outputWinnerIndex(winner.id)
+            hideWinner(winner)    
+
+            console.log('Line above - hide winner responsivble for hiding element !!')
         }.bind(this)
 
         return new Promise(promiseCB)
     }
 
     _getWinner(totalAngle) {
-        let itemList = this._getState().items;
-        return itemList[this._getWinnerIndex(totalAngle)].label
+        let itemList = this._getStateNotHiddenItems();
+        return itemList[this._getWinnerIndex(totalAngle)]
     }
     _getWinnerIndex(totalAngle) {
-        let itemList = this._getState().items;
+        let itemList = this._getStateNotHiddenItems();
         let nrOfCircleItemsInSingleCircle = itemList.length;
         let angleOfEachCirclePart = 360 / nrOfCircleItemsInSingleCircle;
         let nrOfCirclePartsFromSpinning = Math.floor(totalAngle / angleOfEachCirclePart)
@@ -113,7 +129,10 @@ class SpinningWheelComponent extends StateHandlingAbstractComponent{
 
     }
 
-    _
+    _recreateThisComponent(newStateItems = this._state.items){
+        this._removeElement(this.shadowRoot.querySelector('svg'))
+        this._addSpinningWheel(newStateItems);
+    }
 
     _getWheelCreator() {
         if (this.wheelCreator == undefined) {
@@ -124,8 +143,6 @@ class SpinningWheelComponent extends StateHandlingAbstractComponent{
 
     _getTemplate(){
         let wheelCreator = this._getWheelCreator();
-        // console.log(this._getState())
-        // console.log(this._getWheelCreator().createSpinCircleElement(this._getState()))
         let output = `
             <style>
                 .center{

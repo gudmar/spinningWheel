@@ -16,14 +16,18 @@ class Modal extends AbstractComponent{
             set: function (obj, key, val) {
                 switch (key) {
                     case 'visible':
-                        if (val) {
+                        if (!val) {
+                            this.setAttribute('data-visible', false)
                             this._hide()
                         } else {
+                            this.setAttribute('data-visible', true)
                             this.show()
                         }
                         break;
                 }
                 obj[key] = val;
+                console.log(key)
+                console.log(obj[key])
                 return true;
             }.bind(this)
         }
@@ -44,24 +48,44 @@ class Modal extends AbstractComponent{
     connectedCallback(){
         this.closeButton = this.shadowRoot.querySelector('.modal-shut-button');
         this.closeButton.addEventListener('click', this._shouldBeVisible.bind(this, false))
+        this._initialShowHide();
+    }
+
+    _initialShowHide(){
+        if (this._state.visible) {
+            this.show()
+        } else {
+            this._hide()
+        }
     }
 
     attributeChangedCallback(attrName, oldVal, newVal) {
         if (attrName == 'data-visible'){
-            this.state.visible = newVal
+            newVal = this._stringOrBooleanToBoolean(newVal)
+            if (this.state.visible != newVal){
+                this.state.visible = newVal
+            }
         }
     }
 
+    _stringOrBooleanToBoolean(val) {
+        let output = val
+        if (typeof(val) == 'string') {
+            output = val == "false"?false:true;
+        }  
+        return output
+    }
+
     _shouldBeVisible(shouldBeVisible){
-        this.state.visible = shouldBeVisible
+        this.state.visible = this._stringOrBooleanToBoolean(shouldBeVisible)
     }
 
     show(){
-        this.shadowRoot.querySelector('.modal-cover').classList.add('hidden')
+        this.shadowRoot.querySelector('.modal-cover').classList.remove('hidden')
         this._disableScroll();
     }
     _hide(){
-        this.shadowRoot.querySelector('.modal-cover').classList.remove('hidden')
+        this.shadowRoot.querySelector('.modal-cover').classList.add('hidden')
         this._enableScroll();
     }
 

@@ -1,3 +1,7 @@
+// DEPENDENCIES:
+// ColorGenerator    -> colorGenerator.js
+
+
 class SvgWheelCreator{
     constructor(diameter){
         this._setState(diameter);

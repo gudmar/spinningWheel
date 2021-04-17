@@ -1,3 +1,12 @@
+// DEPENDENCIES:
+// ColorGenerator    -> colorGenerator.js
+// wheelDrawer       -> wheelDrawer.js
+// AbstractComponent -> abstractCustomWebComponent.js
+// StateHandlingAbstractComponent ->  stateHandlingAbstractComponent.js
+// SpinningWheelComponent_testVersion -> testSStatisticsSpinningWheel.js
+
+
+
 class WinningElementStatisticsCounter extends AbstractComponent{
     constructor() {
         super();

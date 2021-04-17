@@ -200,6 +200,7 @@ class Modal extends AbstractComponent{
             .modal-shut-button{
                 background-color: red;
                 color: white;
+                z-index: 100;
             }
             .hidden{
                 display: none;

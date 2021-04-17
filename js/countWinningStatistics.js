@@ -16,16 +16,13 @@ class WinningElementStatisticsCounter extends AbstractComponent{
     _getStateProxyHandler() {
         return {
             set: function(obj, key, val){
-                console.log(`proxy ${key} ${val}`)
                 let oldValue = obj[key]
                 obj[key] = val;
                 if (oldValue != val){
                     if (key == 'executing'){
                         if (val == true) {
-                            console.log('Starting execution')
                             this.executeTests();
                         } else {
-                            console.log('Ending execution')
                             this.executionTheardown();
                         }
                     } 
@@ -44,15 +41,9 @@ class WinningElementStatisticsCounter extends AbstractComponent{
         return this._state
      }
 
-    attributeChangedCallback(attrName, oldVal, newVal) {
-    
-    }
-
     createDummySpinningWheel(){
-        let nrOfInputs = parseInt(this.shadowRoot.querySelector(".nrOfElementsInput").value)
         this.testedItem = document.createElement('test-spinning-wheel')
-        console.log(this.testedItem)
-        this.testedItem.setNrOfWheelItems(nrOfInputs)
+        this.testedItem.setNrOfWheelItems(this.getNrOfWheelPartsFromUserInput())
     }
 
     getTestedItem() {
@@ -60,29 +51,14 @@ class WinningElementStatisticsCounter extends AbstractComponent{
             this.createDummySpinningWheel();
         }
         return this.testedItem
-        // let testedItemSelector = this.getAttribute('data-tested-item-selector');
-        // let getTestedItemBySelector = function(selector) {
-        //     let testedItem = document.querySelector(selector)
-        //     if (testedItem == null || testedItem == undefined) {
-        //         return undefined
-        //     } else {
-        //         return testedItem
-        //     }
-        // }.bind(this)
-        // let testedItem = getTestedItemBySelector(testedItemSelector);
-        // testedItem = testedItem==undefined?getTestedItemBySelector('spinning-wheel'):undefined;
-        // if (testedItem != undefined) {
-        //     return testedItem
-        // } else {
-        //     throw (`${this.constructor.name}: No spinning wheel instance found in DOM. Will not execute.`)
-        // }
     }
-    getNrOfExecutions() {
-        // let nrOfExecutions = this.getAttribute('data-nr-of-executions');
-        // return (nrOfExecutions==undefined || nrOfExecutions == null) ? 10 : nrOfExecutions
-        return this.shadowRoot.querySelector(".nrOfSpinsInput").value
+    getNrOfWheelPartsFromUserInput(){
+        return parseInt(this.shadowRoot.querySelector(".nrOfElementsInput").value)
     }
-    getNrOfSpinWheelEntries(){
+    getNrOfExecutionsFromInput() {
+        return parseInt(this.shadowRoot.querySelector(".nrOfSpinsInput").value)
+    }
+    countNrOfSpinWheelEntries(){
         return this.getTestedItem().querySelectorAll('li').length;
     }
 
@@ -95,8 +71,7 @@ class WinningElementStatisticsCounter extends AbstractComponent{
 
     initiateStates(){
         this._state.listOfElementsInWheel = [];
-        console.log(this._state)
-        for (let i = 0; i < this.getNrOfSpinWheelEntries(); i++) {
+        for (let i = 0; i < this.countNrOfSpinWheelEntries(); i++) {
             this._state.listOfElementsInWheel.push(this.getSingleState())
         }
     }
@@ -107,19 +82,18 @@ class WinningElementStatisticsCounter extends AbstractComponent{
 
     executeTests() {
         let testedItem = this.getTestedItem();    
-        let nrOfExecutions = this.getNrOfExecutions();
+        let nrOfExecutions = this.getNrOfExecutionsFromInput();
         let indexOfExecution = 0;
         this.initiateStates();
         this.executeSingleSpin(this.getTestedItem());
         this.addWinner = function(e){
-            console.log('Execution nr : ' + indexOfExecution)
             this._state['listOfElementsInWheel'][parseInt(e.detail)].nrOfWins++;
             indexOfExecution++;
             this.executeSingleSpin(this.getTestedItem());
             if (indexOfExecution > nrOfExecutions) {
                 this._state['executing'] = false;
             }
-        }.bind(this) //, indexOfExecution, nrOfExecutions)
+        }.bind(this)
         this.initiateStates();
         testedItem.addEventListener('spinEnded', this.addWinner)
     }
@@ -128,6 +102,7 @@ class WinningElementStatisticsCounter extends AbstractComponent{
         testedItem.removeEventListener('spinEnded', this.addWinner);
         this.placeTableWithResultsAsStrint();
         this._state.listOfElementsInWheel = [];
+        delete this.testedItem;
     }
 
     placeTableWithResultsAsStrint() {
@@ -204,11 +179,30 @@ class WinningElementStatisticsCounter extends AbstractComponent{
                 font-weight: bold;
                 font-size: 1.3rem;
             }
+            .output-placeholder{
+                width: 100%;
+                position: relative;
+            }
+            table{
+                text-align: center;
+                // border: solid thin black;
+            }
+            td{
+                background-color: green;
+                padding: 5px;
+                color: white;
+            }
+            th{
+                background-color: black;
+                padding: 5px;
+                color: white;                
+            }
             input{
                 margin-right: 3rem;
                 position: relative;
                 width: 4rem;
             }
+            
             </style>
             <div class = "wrapper center column top">
                 <div class = "title-bar center left">
@@ -221,7 +215,7 @@ class WinningElementStatisticsCounter extends AbstractComponent{
                     <span>Nr of spins: </span>
                     <input class = "nrOfSpinsInput" type = "number" value = "10">
                 </div>
-                <div class="output-placeholder">
+                <div class="output-placeholder center">
                 </div>
             </div>
         `

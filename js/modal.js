@@ -1,3 +1,7 @@
+// DEPENDENCIES:
+// AbstractComponent -> abstractCustomWebComponent.js
+
+
 class Modal extends AbstractComponent{
     constructor(){
         super()

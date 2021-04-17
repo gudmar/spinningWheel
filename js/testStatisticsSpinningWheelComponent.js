@@ -1,3 +1,10 @@
+// DEPENDENCIES:
+// ColorGenerator    -> colorGenerator.js
+// wheelDrawer       -> wheelDrawer.js
+// AbstractComponent -> abstractCustomWebComponent.js
+// StateHandlingAbstractComponent ->  stateHandlingAbstractComponent.js
+
+
 class SpinningWheelComponent_testVersion extends StateHandlingAbstractComponent{
 
     constructor(){
@@ -19,6 +26,8 @@ class SpinningWheelComponent_testVersion extends StateHandlingAbstractComponent{
         this.objectToSpin = this.shadowRoot.querySelector('g')
         this.objectToSpin.addEventListener('click', animation)
     }
+
+
 
     connectedCallback(){
         // let animation = this._animate.bind(this)

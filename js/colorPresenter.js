@@ -1,3 +1,7 @@
+// DEPENDENCIES:
+// ColorGenerator    -> colorGenerator.js
+
+
 class ColorPresenter extends AbstractComponent{
     constructor() {
         super();

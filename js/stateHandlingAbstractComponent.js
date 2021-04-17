@@ -1,4 +1,7 @@
-
+// DEPENDENCIES:
+// ColorGenerator    -> colorGenerator.js
+// wheelDrawer       -> wheelDrawer.js
+// AbstractComponent -> abstractCustomWebComponent.js
 
 class StateHandlingAbstractComponent extends AbstractComponent{
     constructor(){

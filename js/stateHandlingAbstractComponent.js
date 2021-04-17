@@ -63,7 +63,7 @@ class StateHandlingAbstractComponent extends AbstractComponent{
         let allItems = this.querySelectorAll('li');
         let index = -1;
         let getObjectFromSingleEntry = function(item){
-            let tempGen = this._getColorGenerator(allItems.length)
+            let tempGen = this._getColorGenerator(allItems.length) 
             let color = tempGen.next();
             index++;
             return {

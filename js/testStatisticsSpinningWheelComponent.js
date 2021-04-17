@@ -39,10 +39,6 @@ class SpinningWheelComponent_testVersion extends StateHandlingAbstractComponent{
         let setParameterOnAnimationEnd = function(winnerIndex) {
             this.setAttribute('data-winnerIndex', winnerIndex)
         }.bind(this)
-        let log = function(message) {
-            console.log(message)
-            console.log(`And the winner is: ${this._getWinner(message)}`)
-        }.bind(this)
         let outputWinnerIndex = function(winnerIndex) {
             setParameterOnAnimationEnd(winnerIndex)
             emitOnAnimationEnd(winnerIndex)
@@ -50,7 +46,6 @@ class SpinningWheelComponent_testVersion extends StateHandlingAbstractComponent{
 
         let promiseCB = async function(resolve, reject){
             let angle = await this._animate();
-            log(angle)
             outputWinnerIndex(this._getWinnerIndex(angle))
         }.bind(this)
 
@@ -84,7 +79,6 @@ class SpinningWheelComponent_testVersion extends StateHandlingAbstractComponent{
             let _deltaAngle = deltaAngle;
             let promiseAnimate = new Promise((resolve, reject) => {
                     movedObject.setAttributeNS(null, 'transform', `rotate(${_angle}, ${radius}, ${radius})`);
-                    console.log(_deltaAngle)
                     let isResolved = false;
                     while(!isResolved){
                         if (_deltaAngle > 1) {
@@ -122,8 +116,6 @@ class SpinningWheelComponent_testVersion extends StateHandlingAbstractComponent{
 
     _getTemplate(){
         let wheelCreator = this._getWheelCreator();
-        // console.log(this._getState())
-        // console.log(this._getWheelCreator().createSpinCircleElement(this._getState()))
         let output = `
             <style>
                 .center{

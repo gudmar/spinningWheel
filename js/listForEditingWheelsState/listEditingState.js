@@ -24,6 +24,10 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
     _getTemplate(){
         return `
             <style>
+                *{
+                    --cell-border-radius: 5px;
+                    box-sizing: border-box;
+                }
                 .center{
                     display: flex;
                     justify-content: center;
@@ -37,22 +41,54 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
                 table{
                     text-align: center;
                     color: white;
+                    table-layout: fixed;
+                    width: 100%;
+                    min-width: 500px;
+                }
+                tbody{
+                    overflow: auto;
+                    position: relative;
+                    height: 100%;
                 }
                 th{
                     background-color: rgb(100, 100, 100);
                     color: white;
+                    position: sticky;
+                    z-index: 10000;
+                    top: 0;
+
                 }
                 tr{
                     background-color: rgb(230, 230, 230);
                     color: black;
+                    width: 100%;
                 }
-                tr:nth(3){
+                td,th {
+                    // position: relative; 
+                    height: 50px;
+                    border-radius: var(--cell-border-radius);
+                    padding: 10px;
+                }
+                td:nth-child(3){
                     text-align: left;
+                }
+                th:nth-child(1),td:nth-child(1){
+                    width: 10%;
+                }
+                th:nth-child(2),td:nth-child(2){
+                    width: 15%;
+                }
+                th:nth-child(4),td:nth-child(4){
+                    width: 70px;
+                }
+                th:nth-child(3),td:nth-child(3){
+                    width: 75%;
                 }
                 .full-table-cell {
                     position: relative;
                     widht: 100%;
                     height: 100%;
+                    border-radius: var(--cell-border-radius);
                 }
                 .button{
                     border-radius: 5px;
@@ -80,9 +116,11 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
                 }
                 .ok-bg-color{
                     background-color: green;
+                    color: white;
                 }
                 .x-bg-color{
                     background-color: red;
+                    color: white;
                 }
             </style>
             <div class="wrapper">
@@ -96,15 +134,16 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
     }
 
     _getTHeadRowTemplate(){
-        return this._getRowTemplate(["+/-", "Label", "Message", "V/H"], "th")
+        return `<thead>${this._getRowTemplate(["+/-", "Label", "Message", "V/H"], "th")}</thead>`
     }
 
     _getBodyRowTemplate(wheelPartLabel, relatedMessage, isHidden){
         let booleanIsHiddenConverter = function() {return isHidden?'Hidden':"Visible"}.bind(this)
         let isHiddenToBgColorClassConverter = function() {return isHidden?'x-bg-color':'ok-bg-color'}.bind(this)
         let firstRowContent = `<div class = "full-table-cell center">${this._getDeleteThisRowButtonTemplate()}${this._getAddNextRowButtonTemplate()}</div>`
-        let isHiddenContent = `<div class = "full-table-cell viewed-cell center ${isHiddenToBgColorClassConverter()}">${booleanIsHiddenConverter()}</div>`
-        return `<tr>${this._getRowTemplate([firstRowContent, wheelPartLabel, relatedMessage, isHiddenContent], 'td', {2: 'contenteditable = true'})}</tr>`
+        let isHiddenContent = `${booleanIsHiddenConverter()}`
+        return `<tr>${this._getRowTemplate([firstRowContent, wheelPartLabel, relatedMessage, isHiddenContent], 
+            'td', {2: 'contenteditable = true', 3: `class = ${isHiddenToBgColorClassConverter()}`})}</tr>`
     }
 
 

@@ -64,29 +64,33 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
                     width: 100%;
                 }
                 td,th {
-                    // position: relative; 
                     height: 50px;
                     border-radius: var(--cell-border-radius);
-                    padding: 10px;
+                    
                 }
                 td:nth-child(3){
                     text-align: left;
+                    
                 }
                 th:nth-child(1),td:nth-child(1){
-                    width: 10%;
+                    width: 60px; 
                 }
                 th:nth-child(2),td:nth-child(2){
                     width: 15%;
+                    padding: 10px;
                 }
                 th:nth-child(4),td:nth-child(4){
                     width: 70px;
+                    padding: 10px;
                 }
                 th:nth-child(3),td:nth-child(3){
                     width: 75%;
+                    padding: 10px;
                 }
                 .full-table-cell {
+                    box-sizing: initial;
                     position: relative;
-                    widht: 100%;
+                    width: 100%;
                     height: 100%;
                     border-radius: var(--cell-border-radius);
                 }
@@ -94,8 +98,9 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
                     border-radius: 5px;
                     color: white;
                     position: relative;
-                    width: 1rem;
-                    height: 1rem;
+                    margin: 3px;
+                    width: 20px;
+                    height: 20px;
                 }
                 .button:hover {
                     cursor: pointer;
@@ -140,7 +145,7 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
     _getBodyRowTemplate(wheelPartLabel, relatedMessage, isHidden){
         let booleanIsHiddenConverter = function() {return isHidden?'Hidden':"Visible"}.bind(this)
         let isHiddenToBgColorClassConverter = function() {return isHidden?'x-bg-color':'ok-bg-color'}.bind(this)
-        let firstRowContent = `<div class = "full-table-cell center">${this._getDeleteThisRowButtonTemplate()}${this._getAddNextRowButtonTemplate()}</div>`
+        let firstRowContent = `<div class="center full-table-cell">${this._getDeleteThisRowButtonTemplate()}${this._getAddNextRowButtonTemplate()}</div>`
         let isHiddenContent = `${booleanIsHiddenConverter()}`
         return `<tr>${this._getRowTemplate([firstRowContent, wheelPartLabel, relatedMessage, isHiddenContent], 
             'td', {2: 'contenteditable = true', 3: `class = ${isHiddenToBgColorClassConverter()}`})}</tr>`

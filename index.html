@@ -18,14 +18,27 @@
     <script src="./js/spinningWheelComponent.js" defer></script>
     <script src="./js/testWheelStatistic/testStatisticsSpinningWheelComponent.js" defer></script>
     <script src="./js/testWheelStatistic/countWinningStatistics.js" defer></script>
+    <script src="./js/listForEditingWheelsState/listEditingState.js" defer></script>
 
 </head>
 <body>
     <hidable-modal id = "modal-colors"><color-presenter></color-presenter></hidable-modal>
     <hidable-modal id = "modal-statistics" data-visible=false><winnig-statistics data-nr-of-executions = "100" ></winnig-statistics></hidable-modal>
+    <hidable-modal id = "modal-edit" data-visible=true>
+        <editing-wheel-state-list>
+            <ul>
+                <li>Content 1</li>
+                <li>Content 2</li>
+                <li>Content 3</li>
+                <li>Content 4</li>
+                <li>Content 5</li>
+            </ul>
+        </editing-wheel-state-list>
+    </hidable-modal>
     <div id="menu">
         <custom-button data-label="Present colors" value="show" onClick="showModal('modal-colors')"></custom-button>
         <custom-button data-label="Statistics"  value="show" onClick="showModal('modal-statistics')"></custom-button>
+        <custom-button data-label="Edit Wheel"  value="show" onClick="showModal('modal-edit')"></custom-button>
     </div>
     <spinning-wheel>
         <ul>

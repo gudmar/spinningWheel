@@ -14,6 +14,7 @@ class StateHandlingAbstractComponent extends AbstractComponent{
         }
         if (this._state.items == undefined) {
             this._state.items = this._getListOfEntriesFromInnerHTML();
+            console.log('GET ITEMS')
         }
         return this._state
     }
@@ -29,53 +30,70 @@ class StateHandlingAbstractComponent extends AbstractComponent{
         return this.colorGenerator
     }
 
-    _onInnerHTMLChange(){
-        let oldSateItmes = this._copyArrayOfObjects(this._getState().items)
-        let newStateItems = this._getListOfEntriesFromInnerHTML()
-        if (!Comparator.areStatesEqual(oldSateItmes, newStateItems)){
-            this._state.items = newStateItems
+    _onInnerHTMLChange(mutationsList, observer){
+        let getItemsToCompare = function(arrayOfItems){
+            let output = arrayOfItems.map((item) => {
+                const {label, isHidden, message} = item
+                return {label, isHidden, message}
+            })
+            return output
+        }
+        let getAddedNode = function(){
+            return mutationsList.find((item) => {return item.addedNodes.length > 0 ? true : false}).addedNodes
+        }
+        let currnetState = this._copyArrayOfObjects(this._getState().items)
+        let stateFromHtmlAfterChange = this._copyArrayOfObjects(this._getListOfEntriesFromInnerHTML.call(getAddedNode()[0]));
+        if (!Comparator.areStatesEqual(getItemsToCompare(currnetState), getItemsToCompare(stateFromHtmlAfterChange))){
+            this._state.items = stateFromHtmlAfterChange
             this._recreateThisComponent();
         }
     }
 
-    _onStateChange(){
-        let newStateItems = this._copyArrayOfObjects(this._getState().items)
-        let oldStateItems = this._getListOfEntriesFromInnerHTML()
-        if (!Comparator.areStatesEqual(oldStateItems, newStateItems)){
-            this._updateInnerHTML(newStateItems)
-            this._state.items = []
-            this._state.items = newStateItems.map(item => item);
-            this._recreateThisComponent();
-        }     
-    }
+    // _onStateChange(){
+    //     let stateFromHtmlAfterChange = this._copyArrayOfObjects(this._getState().items)
+    //     let currnetState = this._getListOfEntriesFromInnerHTML()
+    //     if (!Comparator.areStatesEqual(currnetState, stateFromHtmlAfterChange)){
+    //         this._updateInnerHTML(stateFromHtmlAfterChange)
+    //         this._state.items = []
+    //         this._state.items = stateFromHtmlAfterChange.map(item => item);
+    //         this._recreateThisComponent();
+    //     }     
+    // }
 
     _recreateThisComponent() {
         console.warn(`${this.constructor.name}: _recreateThisComponent needs to be overwritten`)
     }
 
-    _updateInnerHTML(stateItems){
+    _updateInnerHTML(stateItems = this._state.items){
         let output = ''
         stateItems.forEach((item) => {
-            output += `<li ${item.isHidden?'class = "hidden"':''}>${item.label}</li>`
+            output += this._createSingleLiFromStateItemAsString(item)
         })
         this._removeElement(this.querySelector('ul'));
         this.appendChild(this._stringToElement(`<ul>${output}</ul>`)) 
     }
 
 
+    _createSingleLiFromStateItemAsString({label, message, isHidden}){
+        let dataLabel = label == null || label == undefined ? '' : `data-label = "${label}"`;
+        return `<li ${isHidden?'class = "hidden"':''} ${dataLabel}>${message}</li>`
+    }
+
+
 
     _getListOfEntriesFromInnerHTML(){
         let allItems = this.querySelectorAll('li');
-        let index = -1;
-        let getObjectFromSingleEntry = function(item){
-            let tempGen = this._getColorGenerator(allItems.length) 
-            let color = tempGen.next();
-            index++;
+        let getObjectFromSingleEntry = function(item, index){
+            // let tempGen = this._getColorGenerator(allItems.length) 
+            // let color = tempGen.next();
+            let labelAttribute = item.getAttribute('data-label');
+            labelAttribute = labelAttribute == undefined || labelAttribute == null ? index.toString() : labelAttribute;
             return {
-                label: item.innerText,
-                isHidden: Array.from(item.classList).includes('used') ? true : false,
-                fgColor: color.fg,
-                bgColor: color.bg,
+                label: labelAttribute,
+                message: item.innerText,
+                isHidden: Array.from(item.classList).includes('hidden') ? true : false,
+                // fgColor: color.fg,
+                // bgColor: color.bg,
                 id: index
             }
         }.bind(this)
@@ -96,19 +114,26 @@ class StateHandlingAbstractComponent extends AbstractComponent{
     }
 
     _changeItemInStateItems(itemId, key, value){
-        let newStateItems = this._copyArrayOfObjects(this._state.items);
+        let stateFromHtmlAfterChange = this._copyArrayOfObjects(this._state.items);
         let getIndexOfElementToChange = function(){
-            return newStateItems.findIndex((element, index)=>{
+            return stateFromHtmlAfterChange.findIndex((element, index)=>{
                 return element.id == itemId;
             } )
         }
         let prepareNewState = function(){
-            newStateItems[getIndexOfElementToChange()][key] = value;
+            stateFromHtmlAfterChange[getIndexOfElementToChange()][key] = value;
         }
         prepareNewState()
-        this._state.items = newStateItems;
-        // this._onStateChange();
-        this._recreateThisComponent();
+        this._state.items = stateFromHtmlAfterChange;
+        // this._recreateThisComponent();  // side effect
+    }
+
+    _addItemToStateBeforeIndex(index, item) {
+        this._state.items.splice(index, 0, item)
+    }
+
+    _removeItemFromStateAtIndex(index){
+        this._state.items.splice(index, 1)
     }
 
     
@@ -132,12 +157,12 @@ class Comparator{
         return ObjectComparator.areEqualEnumerableArrayValuesCompare(a, b)
     }
 
-    static findAddedIndexes(oldStateItems, newStateItems){
-        return Comparator._findItemsNotExistingInBStateItems(newStateItems, oldStateItems)
+    static findAddedIndexes(currnetState, stateFromHtmlAfterChange){
+        return Comparator._findItemsNotExistingInBStateItems(stateFromHtmlAfterChange, currnetState)
     }
 
-    static findRemovedIndexes(oldStateItems, newStateItems) {
-        return Comparator._findItemsNotExistingInBStateItems(oldStateItems, newStateItems)
+    static findRemovedIndexes(currnetState, stateFromHtmlAfterChange) {
+        return Comparator._findItemsNotExistingInBStateItems(currnetState, stateFromHtmlAfterChange)
     }
 
     static findIndexesOfCommonItems(stateAItems, stateBItems) {

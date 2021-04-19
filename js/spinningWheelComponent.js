@@ -50,15 +50,18 @@ class SpinningWheelComponent extends StateHandlingAbstractComponent{
             this.setAttribute('data-winnerIndex', winnerIndex)
         }.bind(this)
         let log = function(message) {
-            console.log(message)
             console.log(`And the winner is: ${this._getWinner(message).label}`)
+            console.log(`Winning message: ${this._getWinner(message).message}`)
         }.bind(this)
         let outputWinnerIndex = function(winnerIndex) {
             setParameterOnAnimationEnd(winnerIndex)
             emitOnAnimationEnd(winnerIndex)
         }.bind(this)
         let hideWinner = function(winner){
-            this._changeItemInStateItems(winner.id, 'isHidden', true)
+            this._changeItemInStateItems(winner.id, 'isHidden', true);
+            this._updateInnerHTML();
+            this._recreateThisComponent();
+            
         }.bind(this)
 
         let promiseCB = async function(resolve, reject){

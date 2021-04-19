@@ -124,6 +124,9 @@ class Modal extends AbstractComponent{
     _getTemplate(){
         return `
         <style>
+        *{
+            box-sizing: border-box;
+        }
             .center{
                 display: flex;
                 justify-content: center;
@@ -153,12 +156,13 @@ class Modal extends AbstractComponent{
                 display: flex;
                 justify-content: flex-end;
                 width: 100%;
-                height: 3rem;
+                height: 4rem;
             }
             .modal-content{
                 position: relative;
                 height:  calc( 100% - 6rem );
                 padding: 1rem;
+                padding-top: 0;
                 overflow: auto;
             }
             .modal-shut-button{

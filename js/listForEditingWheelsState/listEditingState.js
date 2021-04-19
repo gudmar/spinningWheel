@@ -8,13 +8,43 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
     }
     _placeTableBodyContentOutOfStates(){
         console.warn('Handle no list case - empty tag')
+        console.log(this._getState())
         this._getState(); // id , label  items
         let createSilgleRow = function(item){
-            return this._getBodyRowTemplate(item.id, item.label, item.isHidden)
+            return this._getBodyRowTemplate(item.label, item.message, item.isHidden)
         }.bind(this)
-        console.log(this._state)
         let tableBodyContent = this._stringToElement(this._listToHtmlString(this._state.items, createSilgleRow));
         this.shadowRoot.querySelector('tbody').appendChild(tableBodyContent)
+    }
+
+    _addEventListenersForARow(rowElement){
+
+        let removeThisRowCallback = function() {
+
+        }.bind(this)
+        let toggleIsHidden = function() {
+
+        }.bind(this)
+
+    }
+
+    addNextRowCallback(e) {
+        let rowContainingThisAddButton = e.target.parentNode.parentNode;
+        let findThisRowIndex = function() {
+            return Array.from(this.shadowRoot.querySelectorAll('tr')).findIndex((item) => {
+                return item == rowContainingThisAddButton ? true : false;
+            })
+        }
+        this._addRowAtIndex(findThisRowIndex())
+    }
+
+    _addRowAtIndex(index) {
+        this.shadowRoot.querySelector('tbody').insertBefore(this._createNewEmptyRow(), this.shadowRoot.querySelector('tbody').querySelectorAll('tr')[index])
+    }
+    _createNewEmptyRow(){
+        let newRow = this._stringToElement(this._getBodyRowTemplate('', '', false));
+        this._addEventListenersForARow(newRow);
+        return newRow
     }
 
     _recreateThisComponent(){

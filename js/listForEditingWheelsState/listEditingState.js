@@ -5,8 +5,12 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
     }
     connectedCallback(){
         this._placeTableBodyContentOutOfStates();
+        console.log('List editing state  CONNECTED CALLBACK')
     }
     _placeTableBodyContentOutOfStates(){
+
+        if (this.exists == undefined) {
+            console.log(this.exists)
         console.warn('Handle no list case - empty tag')
         console.log(this._getState())
         this._getState(); // id , label  items
@@ -21,6 +25,8 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
             // console.log(item)
             this.shadowRoot.querySelector('tbody').appendChild(createSilgleRow(item))
         })
+        this.exists = 1;
+    }
     }
 
     _getRowChild(rowElement) {
@@ -44,8 +50,8 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
         addButton.addEventListener('click', addNextRowFunction);
         removeButton.addEventListener('click', removeThisRowFunction);
         toggleButton.addEventListener('click', toggleHideShowRow);
-        labelTextbox.addEventListener('click', updateLabel);
-        messageTextbox.addEventListener('click', updateMessage);
+        labelTextbox.addEventListener('input', updateLabel);
+        messageTextbox.addEventListener('input', updateMessage);
 
         
         // console.dir(addButton)
@@ -65,7 +71,7 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
         console.log(index)
         let htmlListElement = this.querySelectorAll('li')[index]
         htmlListElement.innerText = e.target.innerText;
-        this._state.items[index].message = e.target.innerText;
+        // this._state.items[index].message = e.target.innerText;
     }
 
 
@@ -103,6 +109,7 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
     }
     addNextRowCallback(e) {
         let rowContainingThisAddButton = e.target.parentNode.parentNode.parentNode;
+        let newRowWithListeners = this._getRowAsElementWithListeners('', '', false)
         this._addLiAtIndexToInnerHtml(this._findRowIndex(rowContainingThisAddButton))
         this._addRowAtIndex(this._findRowIndex(rowContainingThisAddButton))
     }
@@ -112,7 +119,9 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
     }
 
     _addRowAtIndex(index) {
-        this.shadowRoot.querySelector('tbody').insertBefore(this._createNewEmptyRow(), this.shadowRoot.querySelector('tbody').querySelectorAll('tr')[index])
+        this.shadowRoot.querySelector('tbody')
+            .insertBefore(this._getRowAsElementWithListeners('','',false), this.shadowRoot.querySelector('tbody')
+            .querySelectorAll('tr')[index].nextSibling)
     }
     _createNewEmptyRow(){
         let newRow = this._stringToElement(this._getBodyRowTemplate('', '', false));

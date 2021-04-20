@@ -14,7 +14,6 @@ class StateHandlingAbstractComponent extends AbstractComponent{
         }
         if (this._state.items == undefined) {
             this._state.items = this._getListOfEntriesFromInnerHTML();
-            console.log('GET ITEMS')
         }
         return this._state
     }

@@ -39,8 +39,14 @@ class WinningElementStatisticsCounter extends AbstractComponent{
     }
 
     connectedCallback() {
+        let onExecutionPressed = function() {
+            this.emptyExecutionResults();
+            this._state.executing = true
+        }.bind(this)
         this._rememberInputValues();
-        this.shadowRoot.getElementById('executionStarterId').addEventListener('click', () => {this._state.executing = true})
+        this.shadowRoot.getElementById('executionStarterId').addEventListener('click', () => {
+            onExecutionPressed();
+        })
         this.shadowRoot.querySelector('.nrOfElementsInput').addEventListener('input', this._changeNrOfExecitions.bind(this))
         this._createExecutionResultsProxy();
         this.placeTableWithResultsAsString();
@@ -145,6 +151,12 @@ class WinningElementStatisticsCounter extends AbstractComponent{
             indexNr: null,
             nrOfWins: 0
         }
+    }
+
+    emptyExecutionResults(){
+        Object.keys(this.executionResults).forEach(key => {
+            this.executionResults[key] = 0;
+        });
     }
 
     initiateStates(){

@@ -71,8 +71,10 @@ class StateHandlingAbstractComponent extends AbstractComponent{
         this._removeElement(this.querySelectorAll('li')[index])
     }
 
-    _addLiAtIndexToInnerHtml(index) {
-        console.error('Implement this')
+    _addLiAtIndexToInnerHtml(index, label = '') {
+        let liToAdd = document.createElement('li');
+        liToAdd.setAttribute('data-label', label)
+        this._insertElementAtPosition(index, this.querySelector('ul'), liToAdd)
     }
 
     _addHiddenClassToLiAtIndex(index){
@@ -86,8 +88,7 @@ class StateHandlingAbstractComponent extends AbstractComponent{
     }
 
     _insertElementAtPosition(index, parentElement, itemToAdd) {
-        console.error('Implement this')
-
+        parentElement.insertBefore(itemToAdd, parentElement.children[index].nextSibling)
     }
 
 

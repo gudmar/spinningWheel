@@ -11,31 +11,104 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
         console.log(this._getState())
         this._getState(); // id , label  items
         let createSilgleRow = function(item){
-            return this._getBodyRowTemplate(item.label, item.message, item.isHidden)
+            return this._getRowAsElementWithListeners(item.label, item.message, item.isHidden)
+            // return this._getBodyRowTemplate(item.label, item.message, item.isHidden)
         }.bind(this)
+
         let tableBodyContent = this._stringToElement(this._listToHtmlString(this._state.items, createSilgleRow));
-        this.shadowRoot.querySelector('tbody').appendChild(tableBodyContent)
+        // this.shadowRoot.querySelector('tbody').appendChild(tableBodyContent)
+        this._state.items.forEach((item) => {
+            // console.log(item)
+            this.shadowRoot.querySelector('tbody').appendChild(createSilgleRow(item))
+        })
     }
 
-    _addEventListenersForARow(rowElement){
-
-        let removeThisRowCallback = function() {
-
-        }.bind(this)
-        let toggleIsHidden = function() {
-
-        }.bind(this)
-
-    }
-
-    addNextRowCallback(e) {
-        let rowContainingThisAddButton = e.target.parentNode.parentNode;
-        let findThisRowIndex = function() {
-            return Array.from(this.shadowRoot.querySelectorAll('tr')).findIndex((item) => {
-                return item == rowContainingThisAddButton ? true : false;
-            })
+    _getRowChild(rowElement) {
+        return {
+            removeButton: rowElement.querySelector('.button.x-bg-color'),
+            addButton:    rowElement.querySelector('.button.ok-bg-color'),
+            toggleButton: rowElement.querySelector('td:nth-child(4)'),
+            labelTextbox: rowElement.querySelector('td:nth-child(2)'),
+            messageTextbox: rowElement.querySelector('td:nth-child(3)')
         }
-        this._addRowAtIndex(findThisRowIndex())
+    }
+
+    _getRowAsElementWithListeners(label, message, isHidden) {
+        const rowElement = this._stringToElement(this._getBodyRowTemplate(label, message, isHidden));
+        const {removeButton, addButton, toggleButton, labelTextbox, messageTextbox} = this._getRowChild(rowElement);
+        let addNextRowFunction = this.addNextRowCallback.bind(this);
+        let removeThisRowFunction = this.removeThisRowCallback.bind(this);
+        let toggleHideShowRow = this._toggleHideShowRow.bind(this);
+        let updateLabel = this._updateLabel.bind(this);
+        let updateMessage = this._updateMessage.bind(this);
+        addButton.addEventListener('click', addNextRowFunction);
+        removeButton.addEventListener('click', removeThisRowFunction);
+        toggleButton.addEventListener('click', toggleHideShowRow);
+        labelTextbox.addEventListener('click', updateLabel);
+        messageTextbox.addEventListener('click', updateMessage);
+
+        
+        // console.dir(addButton)
+        // UPDATA STATE
+        return rowElement
+    }
+
+    _updateLabel(e){
+        const index  = this._findRowIndex(e.target)
+        let htmlListElement = this.querySelectorAll('li')[index]
+        htmlListElement.addAttribute('data-label', e.target.innerText)
+        this._state.items[index].label = e.target.innerText;
+    }
+
+    _updateMessage(e){
+        const index = this._findRowIndex(e.target.parentNode)
+        console.log(index)
+        let htmlListElement = this.querySelectorAll('li')[index]
+        htmlListElement.innerText = e.target.innerText;
+        this._state.items[index].message = e.target.innerText;
+    }
+
+
+    _toggleHideShowRow(e){
+        if (e.target.innerText == 'Hidden') {
+            this._showWheelElement(e)
+        } else {
+            this._hideWheelElement(e)
+        }
+    }
+
+    _hideWheelElement(e){
+        const index = this._findRowIndex(e.target.parentNode);
+        this._addHiddenClassToLiAtIndex(index)
+        e.target.classList.remove('ok-bg-color');
+        e.target.classList.add('x-bg-color');
+        e.target.innerText = 'Hidden'
+        this._state.items[index].isHidden = true;
+    }
+
+    _showWheelElement(e){
+        const index = this._findRowIndex(e.target.parentNode);
+        this._removeHiddenClassFromLiAtIndex(index)
+        e.target.classList.remove('x-bg-color');
+        e.target.classList.add('ok-bg-color');
+        e.target.innerText = 'Visible'
+        this._state.items[index].isHidden = false;
+    }
+
+
+    removeThisRowCallback(e) {
+        let rowToBeRemoved = e.target.parentNode.parentNode.parentNode;
+        this._removeLiAtIndexFromInnerHtml(this._findRowIndex(rowToBeRemoved))
+        this._removeElement(rowToBeRemoved);
+    }
+    addNextRowCallback(e) {
+        let rowContainingThisAddButton = e.target.parentNode.parentNode.parentNode;
+        this._addLiAtIndexToInnerHtml(this._findRowIndex(rowContainingThisAddButton))
+        this._addRowAtIndex(this._findRowIndex(rowContainingThisAddButton))
+    }
+
+    _findRowIndex(rowAsElement) {
+        return Array.from(this.shadowRoot.querySelector('tBody').querySelectorAll('tr')).indexOf(rowAsElement)
     }
 
     _addRowAtIndex(index) {
@@ -43,7 +116,7 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
     }
     _createNewEmptyRow(){
         let newRow = this._stringToElement(this._getBodyRowTemplate('', '', false));
-        this._addEventListenersForARow(newRow);
+        // this._addEventListenersForARow(newRow);
         return newRow
     }
 
@@ -177,8 +250,8 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
         let isHiddenToBgColorClassConverter = function() {return isHidden?'x-bg-color':'ok-bg-color'}.bind(this)
         let firstRowContent = `<div class="center full-table-cell">${this._getDeleteThisRowButtonTemplate()}${this._getAddNextRowButtonTemplate()}</div>`
         let isHiddenContent = `${booleanIsHiddenConverter()}`
-        return `<tr>${this._getRowTemplate([firstRowContent, wheelPartLabel, relatedMessage, isHiddenContent], 
-            'td', {2: 'contenteditable = true', 3: `class = ${isHiddenToBgColorClassConverter()}`})}</tr>`
+        return `${this._getRowTemplate([firstRowContent, wheelPartLabel, relatedMessage, isHiddenContent], 
+            'td', {2: 'contenteditable = true', 3: `class = ${isHiddenToBgColorClassConverter()}`})}`
     }
 
 

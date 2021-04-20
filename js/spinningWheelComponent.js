@@ -57,9 +57,9 @@ class SpinningWheelComponent extends StateHandlingAbstractComponent{
             setParameterOnAnimationEnd(winnerIndex)
             emitOnAnimationEnd(winnerIndex)
         }.bind(this)
-        let hideWinner = function(winner){
-            this._changeItemInStateItems(winner.id, 'isHidden', true);
-            this._updateInnerHTML();
+        let hideWinner = function(winnerIndex){
+            this._changeItemInStateItems(this._getWinner(winnerIndex).id, 'isHidden', true);
+            this._addHiddenClassToLiAtIndex(winnerIndex)
             this._recreateThisComponent();
             
         }.bind(this)
@@ -67,9 +67,9 @@ class SpinningWheelComponent extends StateHandlingAbstractComponent{
         let promiseCB = async function(resolve, reject){
             let angle = await this._animate();
             log(angle)
-            let winner = this._getWinner(angle)
-            outputWinnerIndex(winner.id)
-            hideWinner(winner)    
+            let winnerIndex = this._getWinnerIndex(angle)
+            outputWinnerIndex(this._getWinner(winnerIndex).id)
+            hideWinner(winnerIndex)    
 
             console.log('Line above - hide winner responsivble for hiding element !!')
         }.bind(this)

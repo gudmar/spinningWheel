@@ -38,27 +38,22 @@ class StateHandlingAbstractComponent extends AbstractComponent{
             })
             return output
         }
-        let getAddedNode = function(){
-            return mutationsList.find((item) => {return item.addedNodes.length > 0 ? true : false}).addedNodes
+        let mutationTarget = mutationsList[0].target;
+        let getUlHtmlAfterChange = function(){
+            if (mutationTarget.nodeName == "LI") {return mutationTarget.parentNode;}
+            else if (mutationTarget.nodeName == "UL") {return mutationTarget}
+            else {return mutationTarget.querySelector('ul')}
         }
+        let getStateCopyAfterChange = function(){
+            return  this._copyArrayOfObjects(this._getListOfEntriesFromInnerHTML.call(getUlHtmlAfterChange(mutationTarget)))
+        }.bind(this)
         let currnetState = this._copyArrayOfObjects(this._getState().items)
-        let stateFromHtmlAfterChange = this._copyArrayOfObjects(this._getListOfEntriesFromInnerHTML.call(getAddedNode()[0]));
+        let stateFromHtmlAfterChange = getStateCopyAfterChange()
         if (!Comparator.areStatesEqual(getItemsToCompare(currnetState), getItemsToCompare(stateFromHtmlAfterChange))){
             this._state.items = stateFromHtmlAfterChange
             this._recreateThisComponent();
         }
     }
-
-    // _onStateChange(){
-    //     let stateFromHtmlAfterChange = this._copyArrayOfObjects(this._getState().items)
-    //     let currnetState = this._getListOfEntriesFromInnerHTML()
-    //     if (!Comparator.areStatesEqual(currnetState, stateFromHtmlAfterChange)){
-    //         this._updateInnerHTML(stateFromHtmlAfterChange)
-    //         this._state.items = []
-    //         this._state.items = stateFromHtmlAfterChange.map(item => item);
-    //         this._recreateThisComponent();
-    //     }     
-    // }
 
     _recreateThisComponent() {
         console.warn(`${this.constructor.name}: _recreateThisComponent needs to be overwritten`)
@@ -71,6 +66,29 @@ class StateHandlingAbstractComponent extends AbstractComponent{
         })
         this._removeElement(this.querySelector('ul'));
         this.appendChild(this._stringToElement(`<ul>${output}</ul>`)) 
+    }
+
+    _removeLiAtIndexFromInnerHtml(index) {
+        this._removeElement(this.querySelectorAll('li')[index])
+    }
+
+    _addLiAtIndexToInnerHtml(index) {
+        console.error('Implement this')
+    }
+
+    _addHiddenClassToLiAtIndex(index){
+        let htmlItems = this.querySelectorAll('li');
+        htmlItems[index].classList.add('hidden')
+    }
+
+    _removeHiddenClassFromLiAtIndex(index){
+        let htmlItems = this.querySelectorAll('li');
+        htmlItems[index].classList.remove('hidden')
+    }
+
+    _insertElementAtPosition(index, parentElement, itemToAdd) {
+        console.error('Implement this')
+
     }
 
 

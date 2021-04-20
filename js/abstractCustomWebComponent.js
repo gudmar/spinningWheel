@@ -8,7 +8,9 @@ class AbstractComponent extends HTMLElement {
         observer.observe(this, 
             {
                 subtree: true,
-                childList: true
+                childList: true,
+                attributes: true,
+                characterData: true
             }
         )
         // this.state = new Proxy(this._state, this._getStateProxyHandler())

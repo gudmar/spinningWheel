@@ -51,12 +51,20 @@ class StateHandlingAbstractComponent extends AbstractComponent{
         if (!Comparator.areStatesEqual(getItemsToCompare(currnetState), getItemsToCompare(stateFromHtmlAfterChange))){
             this._state.items = stateFromHtmlAfterChange
             this._recreateThisComponent();
+            this._emitEventOnStateChange();
         }
+    }
+
+
+    _emitEventOnStateChange(){
+        let stateChangeEvent = new CustomEvent(this.COMPONENT_STATE_CHANGED);
+        this.dispatchEvent(stateChangeEvent)
     }
 
     _recreateThisComponent() {
         console.warn(`${this.constructor.name}: _recreateThisComponent needs to be overwritten`)
     }
+
 
     _updateInnerHTML(stateItems = this._state.items){
         let output = ''
@@ -66,6 +74,7 @@ class StateHandlingAbstractComponent extends AbstractComponent{
         this._removeElement(this.querySelector('ul'));
         this.appendChild(this._stringToElement(`<ul>${output}</ul>`)) 
     }
+
 
     _removeLiAtIndexFromInnerHtml(index) {
         this._removeElement(this.querySelectorAll('li')[index])
@@ -77,15 +86,18 @@ class StateHandlingAbstractComponent extends AbstractComponent{
         this._insertElementAtPosition(index, this.querySelector('ul'), liToAdd)
     }
 
+
     _addHiddenClassToLiAtIndex(index){
         let htmlItems = this.querySelectorAll('li');
         htmlItems[index].classList.add('hidden')
     }
 
+
     _removeHiddenClassFromLiAtIndex(index){
         let htmlItems = this.querySelectorAll('li');
         htmlItems[index].classList.remove('hidden')
     }
+
 
     _insertElementAtPosition(index, parentElement, itemToAdd) {
         parentElement.insertBefore(itemToAdd, parentElement.children[index].nextSibling)
@@ -98,30 +110,25 @@ class StateHandlingAbstractComponent extends AbstractComponent{
     }
 
 
-
-    _getListOfEntriesFromInnerHTML(){
+    _getListOfEntriesFromInnerHTML() {
         let allItems = this.querySelectorAll('li');
-        let getObjectFromSingleEntry = function(item, index){
-            // let tempGen = this._getColorGenerator(allItems.length) 
-            // let color = tempGen.next();
+        let getObjectFromSingleEntry = function (item, index) {
             let labelAttribute = item.getAttribute('data-label');
             labelAttribute = labelAttribute == undefined || labelAttribute == null ? index.toString() : labelAttribute;
             return {
                 label: labelAttribute,
                 message: item.innerText,
                 isHidden: Array.from(item.classList).includes('hidden') ? true : false,
-                // fgColor: color.fg,
-                // bgColor: color.bg,
                 id: index
             }
         }.bind(this)
         return Array.from(allItems).map(getObjectFromSingleEntry)
     }
 
-    _copyArrayOfObjects(arr){
-        let copySingleElement = function(element){
+    _copyArrayOfObjects(arr) {
+        let copySingleElement = function (element) {
             let copy = {};
-            for (let key in element){
+            for (let key in element) {
                 copy[key] = element[key]
             }
             return copy;
@@ -143,18 +150,18 @@ class StateHandlingAbstractComponent extends AbstractComponent{
         }
         prepareNewState()
         this._state.items = stateFromHtmlAfterChange;
-        // this._recreateThisComponent();  // side effect
     }
+
 
     _addItemToStateBeforeIndex(index, item) {
         this._state.items.splice(index, 0, item)
     }
 
+
     _removeItemFromStateAtIndex(index){
         this._state.items.splice(index, 1)
     }
 
-    
 
     _getListOfNotUsedEntriesFromInnerHTML(){
         let hasNotUsedClass = function(element){

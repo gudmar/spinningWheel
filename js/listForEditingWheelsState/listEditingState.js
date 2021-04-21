@@ -3,21 +3,26 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
         super();
 
     }
+
+
     connectedCallback(){
+        this._getState();
         this._placeTableBodyContentOutOfStates();
     }
-    _placeTableBodyContentOutOfStates(){
 
-        console.warn('Handle no list case - empty tag')
-        this._getState();
-        let createSilgleRow = function(item){
-            return this._getRowAsElementWithListeners(item.label, item.message, item.isHidden)
-        }.bind(this)
-        let tableBodyContent = this._stringToElement(this._listToHtmlString(this._state.items, createSilgleRow));
-        this._state.items.forEach((item) => {
-            this.shadowRoot.querySelector('tbody').appendChild(createSilgleRow(item))
-        })
-        this.exists = 1;
+
+    _placeTableBodyContentOutOfStates() {
+        try {
+            let createSilgleRow = function (item) {
+                return this._getRowAsElementWithListeners(item.label, item.message, item.isHidden)
+            }.bind(this)
+            let tableBodyContent = this._stringToElement(this._listToHtmlString(this._state.items, createSilgleRow));
+            this._state.items.forEach((item) => {
+                this.shadowRoot.querySelector('tbody').appendChild(createSilgleRow(item))
+            })
+        } catch (e) {
+            console.warn(`${this.constructor.name}: table to edit states cannot be created. Perhaps there were no data passed...`)
+        }
     }
 
 
@@ -55,7 +60,6 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
         const index  = this._findRowIndex(e.target.parentNode)
         let htmlListElement = this.querySelectorAll('li')[index]
         htmlListElement.setAttribute('data-label', e.target.innerText)
-        this._state.items[index].label = e.target.innerText;
     }
 
 
@@ -81,7 +85,6 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
         e.target.classList.remove('ok-bg-color');
         e.target.classList.add('x-bg-color');
         e.target.innerText = 'Hidden'
-        this._state.items[index].isHidden = true;
     }
 
 
@@ -91,7 +94,6 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
         e.target.classList.remove('x-bg-color');
         e.target.classList.add('ok-bg-color');
         e.target.innerText = 'Visible'
-        this._state.items[index].isHidden = false;
     }
 
 
@@ -123,7 +125,7 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
 
 
     _recreateThisComponent(){
-
+        // Needs to be overwritten not to have a waring
     }
 
 

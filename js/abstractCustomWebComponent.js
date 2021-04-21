@@ -1,6 +1,8 @@
 class AbstractComponent extends HTMLElement {
     constructor(){
         super();
+        this.COMPONENT_STATE_CHANGED = 'componentStateChanged';
+
         let sH = this.attachShadow({mode: 'open'});
         this._switchContent(this._getTemplate(), sH)
         this._state = {}
@@ -13,16 +15,10 @@ class AbstractComponent extends HTMLElement {
                 characterData: true
             }
         )
-        // this.state = new Proxy(this._state, this._getStateProxyHandler())
     }
-    // _getStateProxyHandler(){
-    //     return {
-    //         set: function(obj, key, val){
-    //             obj[key] = val;
-    //             return true
-    //         }
-    //     }
-    // }
+
+
+
     _removeAllShadowRootChildren() {
         while (this.shadowRoot.firstChild) {
             this.shadowRoot.removeChild(myNode.lastChild);
@@ -34,11 +30,8 @@ class AbstractComponent extends HTMLElement {
     }
 
     _onInnerHTMLChange() {
-        // try {
             this.content.innerHTML = this.innerHTML
-        // } catch (e) {
-        //     // expected - at this moment modalMessageHolder is null;
-        // }
+            console.log('CHANGING WRAPPED CONTENT')
     }
 
     setStateIfNoAttrDefined(attrName, stateKey, cb){
@@ -52,7 +45,6 @@ class AbstractComponent extends HTMLElement {
     _stringToElement(htmlString){
         let template = document.createElement('template');
         template.innerHTML = htmlString;
-        // destinationElement.innerText = '';
         return template.content.cloneNode(true)        
     }
     _switchContent(htmlString, destinationElement){

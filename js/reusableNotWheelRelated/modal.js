@@ -114,7 +114,7 @@ class Modal extends AbstractComponent{
     }
     _onInnerHTMLChange() {
         // try {
-            // this.content.innerHTML = this.innerHTML
+            this.content.innerHTML = this.innerHTML
         // } catch (e) {
         //     // expected - at this moment modalMessageHolder is null;
         // }

@@ -33,8 +33,6 @@ class Modal extends AbstractComponent{
                     default:
                             obj[key] = val;
                 }
-                console.log(key)
-                console.log(obj[key])
                 return true;
             }.bind(this)
         }
@@ -56,6 +54,7 @@ class Modal extends AbstractComponent{
         this.closeButton = this.shadowRoot.querySelector('.modal-shut-button');
         this.closeButton.addEventListener('click', this._shouldBeVisible.bind(this, false))
         this._initialShowHide();
+        console.log('MODAL CALLBACK CONNECTED')
     }
 
     _initialShowHide(){

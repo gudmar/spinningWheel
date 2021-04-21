@@ -55,15 +55,16 @@
         <custom-button data-label="Present colors" value="show" onClick="showModal('modal-colors')"></custom-button>
         <custom-button data-label="Statistics"  value="show" onClick="showModal('modal-statistics')"></custom-button>
         <custom-button data-label="Edit Wheel"  value="show" onClick="showModal('modal-edit')"></custom-button>
+        <custom-button data-label="addInner"  value="show" onClick="addInnerHTML('modal-edit')"></custom-button>
     </div>
     <spinning-wheel>
         <ul>
             <li data-label = "label 1">Option 1</li>
             <li>2</li>
-            <li>Option 3</li>
+            <li>Option 3</li> -->
             <!-- <li>4</li>
             <li>Option 5</li>
-            <li>6</li> -->
+            <li>6</li>
             <!-- <li>Option 1</li>
             <li>2</li>
             <li>Option 3</li>
@@ -83,6 +84,14 @@
     <script>
         function showModal(id){
             document.getElementById(id).setAttribute('data-visible', true)
+        }
+        function addInnerHTML(id){
+            document.getElementById(id).children[0].innerHTML = `
+                    <ul>
+                        <li>some 1</li>
+                        <li>some 2</li>
+                    </ul>
+                `
         }
     </script>
     

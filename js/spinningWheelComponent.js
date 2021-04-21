@@ -23,6 +23,7 @@ class SpinningWheelComponent extends StateHandlingAbstractComponent{
 
     connectedCallback(){
         this._addSpinningWheel();
+        console.log("SPINNING WHEEL ADDED")
     }
 
     _addSpinningWheel(newStateItems = this._getStateNotHiddenItems()){

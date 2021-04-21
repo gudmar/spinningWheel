@@ -3,35 +3,29 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
         super();
 
     }
+
+
     connectedCallback(){
+        this._getState();
         this._placeTableBodyContentOutOfStates();
     }
-    _placeTableBodyContentOutOfStates(){
-        console.warn('Handle no list case - empty tag')
-        console.log(this._getState())
-        this._getState(); // id , label  items
-        let createSilgleRow = function(item){
-            return this._getRowAsElementWithListeners(item.label, item.message, item.isHidden)
-            // return this._getBodyRowTemplate(item.label, item.message, item.isHidden)
-        }.bind(this)
 
-        let tableBodyContent = this._stringToElement(this._listToHtmlString(this._state.items, createSilgleRow));
-        // this.shadowRoot.querySelector('tbody').appendChild(tableBodyContent)
-        this._state.items.forEach((item) => {
-            // console.log(item)
-            this.shadowRoot.querySelector('tbody').appendChild(createSilgleRow(item))
-        })
-    }
 
-    _getRowChild(rowElement) {
-        return {
-            removeButton: rowElement.querySelector('.button.x-bg-color'),
-            addButton:    rowElement.querySelector('.button.ok-bg-color'),
-            toggleButton: rowElement.querySelector('td:nth-child(4)'),
-            labelTextbox: rowElement.querySelector('td:nth-child(2)'),
-            messageTextbox: rowElement.querySelector('td:nth-child(3)')
+    _placeTableBodyContentOutOfStates() {
+        try {
+            let createSilgleRow = function (item) {
+                return this._getRowAsElementWithListeners(item.label, item.message, item.isHidden)
+            }.bind(this)
+            let tableBodyContent = this._stringToElement(this._listToHtmlString(this._state.items, createSilgleRow));
+            this._state.items.forEach((item) => {
+                this.shadowRoot.querySelector('tbody').appendChild(createSilgleRow(item))
+            })
+        } catch (e) {
+            console.warn(`${this.constructor.name}: table to edit states cannot be created. Perhaps there were no data passed...`)
         }
     }
+
+
 
     _getRowAsElementWithListeners(label, message, isHidden) {
         const rowElement = this._stringToElement(this._getBodyRowTemplate(label, message, isHidden));
@@ -44,28 +38,35 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
         addButton.addEventListener('click', addNextRowFunction);
         removeButton.addEventListener('click', removeThisRowFunction);
         toggleButton.addEventListener('click', toggleHideShowRow);
-        labelTextbox.addEventListener('click', updateLabel);
-        messageTextbox.addEventListener('click', updateMessage);
+        labelTextbox.addEventListener('input', updateLabel);
+        messageTextbox.addEventListener('input', updateMessage);
 
-        
-        // console.dir(addButton)
-        // UPDATA STATE
         return rowElement
     }
 
-    _updateLabel(e){
-        const index  = this._findRowIndex(e.target)
-        let htmlListElement = this.querySelectorAll('li')[index]
-        htmlListElement.addAttribute('data-label', e.target.innerText)
-        this._state.items[index].label = e.target.innerText;
+
+    _getRowChild(rowElement) {
+        return {
+            removeButton: rowElement.querySelector('.button.x-bg-color'),
+            addButton:    rowElement.querySelector('.button.ok-bg-color'),
+            toggleButton: rowElement.querySelector('td:nth-child(4)'),
+            labelTextbox: rowElement.querySelector('td:nth-child(2)'),
+            messageTextbox: rowElement.querySelector('td:nth-child(3)')
+        }
     }
+
+
+    _updateLabel(e){
+        const index  = this._findRowIndex(e.target.parentNode)
+        let htmlListElement = this.querySelectorAll('li')[index]
+        htmlListElement.setAttribute('data-label', e.target.innerText)
+    }
+
 
     _updateMessage(e){
         const index = this._findRowIndex(e.target.parentNode)
-        console.log(index)
         let htmlListElement = this.querySelectorAll('li')[index]
         htmlListElement.innerText = e.target.innerText;
-        this._state.items[index].message = e.target.innerText;
     }
 
 
@@ -77,14 +78,15 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
         }
     }
 
+
     _hideWheelElement(e){
         const index = this._findRowIndex(e.target.parentNode);
         this._addHiddenClassToLiAtIndex(index)
         e.target.classList.remove('ok-bg-color');
         e.target.classList.add('x-bg-color');
         e.target.innerText = 'Hidden'
-        this._state.items[index].isHidden = true;
     }
+
 
     _showWheelElement(e){
         const index = this._findRowIndex(e.target.parentNode);
@@ -92,7 +94,6 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
         e.target.classList.remove('x-bg-color');
         e.target.classList.add('ok-bg-color');
         e.target.innerText = 'Visible'
-        this._state.items[index].isHidden = false;
     }
 
 
@@ -101,28 +102,32 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
         this._removeLiAtIndexFromInnerHtml(this._findRowIndex(rowToBeRemoved))
         this._removeElement(rowToBeRemoved);
     }
+
+
     addNextRowCallback(e) {
         let rowContainingThisAddButton = e.target.parentNode.parentNode.parentNode;
+        let newRowWithListeners = this._getRowAsElementWithListeners('', '', false)
         this._addLiAtIndexToInnerHtml(this._findRowIndex(rowContainingThisAddButton))
         this._addRowAtIndex(this._findRowIndex(rowContainingThisAddButton))
     }
+
 
     _findRowIndex(rowAsElement) {
         return Array.from(this.shadowRoot.querySelector('tBody').querySelectorAll('tr')).indexOf(rowAsElement)
     }
 
+
     _addRowAtIndex(index) {
-        this.shadowRoot.querySelector('tbody').insertBefore(this._createNewEmptyRow(), this.shadowRoot.querySelector('tbody').querySelectorAll('tr')[index])
+        this.shadowRoot.querySelector('tbody')
+            .insertBefore(this._getRowAsElementWithListeners('','',false), this.shadowRoot.querySelector('tbody')
+            .querySelectorAll('tr')[index].nextSibling)
     }
-    _createNewEmptyRow(){
-        let newRow = this._stringToElement(this._getBodyRowTemplate('', '', false));
-        // this._addEventListenersForARow(newRow);
-        return newRow
-    }
+
 
     _recreateThisComponent(){
-
+        // Needs to be overwritten not to have a waring
     }
+
 
     _getTemplate(){
         return `
@@ -241,9 +246,11 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
         `
     }
 
+    
     _getTHeadRowTemplate(){
         return `<thead>${this._getRowTemplate(["+/-", "Label", "Message", "V/H"], "th")}</thead>`
     }
+
 
     _getBodyRowTemplate(wheelPartLabel, relatedMessage, isHidden){
         let booleanIsHiddenConverter = function() {return isHidden?'Hidden':"Visible"}.bind(this)
@@ -251,7 +258,7 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
         let firstRowContent = `<div class="center full-table-cell">${this._getDeleteThisRowButtonTemplate()}${this._getAddNextRowButtonTemplate()}</div>`
         let isHiddenContent = `${booleanIsHiddenConverter()}`
         return `${this._getRowTemplate([firstRowContent, wheelPartLabel, relatedMessage, isHiddenContent], 
-            'td', {2: 'contenteditable = true', 3: `class = ${isHiddenToBgColorClassConverter()}`})}`
+            'td', {1: 'contenteditable=true', 2: 'contenteditable = true', 3: `class = ${isHiddenToBgColorClassConverter()}`})}`
     }
 
 
@@ -259,13 +266,16 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
         return this._getButtonTemplate('ok-bg-color', '+')
     }
 
+
     _getDeleteThisRowButtonTemplate(){
         return this._getButtonTemplate('x-bg-color', '&times;')
     }
 
+
     _getButtonTemplate(buttonClass, buttonContent){
         return `<div class = "center button ${buttonClass}">${buttonContent}</div>`
     }
+
 
     _getRowTemplate(listOfColumnContent, tdOrTh, additionalAttributesAsObj = {}) {
         let additionalAttribs = function(index) {
@@ -274,6 +284,7 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
         let convertToTd = function(item, index) { return `<${tdOrTh} ${additionalAttribs(index)}>${item}</${tdOrTh}>`}.bind(this)
         return `<tr>${this._listToHtmlString(listOfColumnContent, convertToTd)}</tr>`
     }
+
 
     _listToHtmlString(listOfItems, cbConvertingSilgleElementToHTMLString){
         let listOfHtmlStrings = listOfItems.map(cbConvertingSilgleElementToHTMLString);

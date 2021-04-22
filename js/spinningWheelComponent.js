@@ -60,7 +60,7 @@ class SpinningWheelComponent extends StateHandlingAbstractComponent{
         }.bind(this)
         let hideWinner = function(winnerIndex){
             this._changeItemInStateItems(this._getWinner(winnerIndex).id, 'isHidden', true);
-            this._addHiddenClassToLiAtIndex(winnerIndex)
+            this._addHiddenClassToNotHiddenLiAtIndex(winnerIndex)
             this._recreateThisComponent();
             
         }.bind(this)
@@ -75,7 +75,12 @@ class SpinningWheelComponent extends StateHandlingAbstractComponent{
             console.log('Line above - hide winner responsivble for hiding element !!')
         }.bind(this)
 
-        return new Promise(promiseCB)
+        return new Promise(promiseCB) 
+    }
+
+    _addHiddenClassToNotHiddenLiAtIndex(index){
+        let htmlItems = this.querySelectorAll('li:not(.hidden)');
+        htmlItems[index].classList.add('hidden')
     }
 
     _getWinner(totalAngle) {

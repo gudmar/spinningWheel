@@ -13,6 +13,8 @@ class Modal extends AbstractComponent{
         this.state = new Proxy(this._state, this._getStateProxyHandler())
         this.setInitialState();
         this.content = this.shadowRoot.querySelector('.modal-content')
+
+        
     }
 
     _getStateProxyHandler() {
@@ -115,6 +117,7 @@ class Modal extends AbstractComponent{
     _onInnerHTMLChange() {
         // try {
             this.content.innerHTML = this.innerHTML
+            
         // } catch (e) {
         //     // expected - at this moment modalMessageHolder is null;
         // }
@@ -226,7 +229,7 @@ class Modal extends AbstractComponent{
                 }
             }
         </style>
-        <div id=${this.id} class = "modal-cover center">
+        <div ${(this.id == undefined || this.id == null || this.id.trim() == '') ? '' : 'id=' + this.id} class = "modal-cover center">
             <div class = "modal-body column">
                 <div class = "modal-title-bar">
                     <div class="quick-button modal-shut-button center">&times;</div>

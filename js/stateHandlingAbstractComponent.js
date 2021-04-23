@@ -249,7 +249,7 @@ class ObjectComparator{
 
 
     static areFunctionsEqual(a, b){
-        // Do not use JSON.stringify, as it often returns undefined while converting functions
+        // Do not use JSON.stringify, as  it often returns undefined while converting functions
         return a.toString() == b.toString()
     }
 
@@ -300,7 +300,7 @@ class ObjectComparator{
 
 
     static haveArraysSameValues(a, b, keyEnumerateMethod = Object.keys){
-        // Arrays are indentical in identical order. JSON.stringify cannot be used due to nested objects !!
+        // Arrays are indentical in identical order. JSON.stringify cannot be used due to nested objects !! 
         let comparationMethod = function(a, b, index){
             return doesAincludeB(a, b[index], keyEnumerateMethod)
         }

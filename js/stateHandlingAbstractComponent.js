@@ -249,7 +249,7 @@ class ObjectComparator{
 
 
     static areFunctionsEqual(a, b){
-        // Do not use JSON.stringify, as it often returns undefined while converting functions
+        // Do not use JSON.stringify, as  it often returns undefined while converting functions
         return a.toString() == b.toString()
     }
 

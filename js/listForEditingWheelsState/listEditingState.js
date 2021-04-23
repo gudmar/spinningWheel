@@ -21,7 +21,7 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
                 this.shadowRoot.querySelector('tbody').appendChild(createSilgleRow(item))
             })
         } catch (e) {
-            console.warn(`${this.constructor.name}: table to edit states cannot be created. Perhaps there were no data passed...`)
+            console.warn(`${this.constructor.name}: table to edit states cannot be created. Perhaps there were no data passed... `)
         }
     }
 

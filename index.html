@@ -11,6 +11,7 @@
     <script src="./js/abstractCustomWebComponent.js" defer></script>
     <script src="./js/reusableNotWheelRelated/button.js" defer></script>
     <script src="./js/reusableNotWheelRelated/modal.js" defer></script>
+    <script src="./js/modalContentWatcher.js" defer></script>
     <script src="./js/colorGenerator.js" defer></script>
     <script src="./js/reusableNotWheelRelated/colorPresenter.js" defer></script>
     <script src="./js/stateHandlingAbstractComponent.js" defer></script>
@@ -20,11 +21,12 @@
     <script src="./js/testWheelStatistic/countWinningStatistics.js" defer></script>
     <script src="./js/listForEditingWheelsState/listEditingState.js" defer></script>
 
+
 </head>
 <body>
     <hidable-modal id = "modal-colors"><color-presenter></color-presenter></hidable-modal>
     <hidable-modal id = "modal-statistics" data-visible=false><winnig-statistics data-nr-of-executions = "100" ></winnig-statistics></hidable-modal>
-    <hidable-modal id = "modal-edit" data-visible=true>
+    <modal-content-change-watcher id = "modal-edit" data-visible=true>
         <editing-wheel-state-list>
             <ul>
                 <li>Content 1</li>
@@ -50,7 +52,7 @@
 
             </ul>
         </editing-wheel-state-list>
-    </hidable-modal>
+    </modal-content-change-watcher>
     <div id="menu">
         <custom-button data-label="Present colors" value="show" onClick="showModal('modal-colors')"></custom-button>
         <custom-button data-label="Statistics"  value="show" onClick="showModal('modal-statistics')"></custom-button>

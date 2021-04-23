@@ -1,0 +1,91 @@
+
+UL_DW - ul describing wheel. Ul html elemen with 'data-label' attibute and class 'hidden' for not displaying any of li elements
+
+1. As developer I wand to have a HTML component managing all subscirbed objects, and keeping their innerHTML alligned
+
+2. Manager object should be independant from other objects and not show up on page. Should have a 'data-subscriber-ids' attribute with coma separatad list of ids
+
+3. As developer I want to have this wrapper elelent to have a list of supported elements nodeNames, so I can easly extend a list of subscibeable elements
+
+4. Manager element should not manage not supported objects, even if their ids were passed
+
+5. Manager should keep a master ul list so subscribers lists get alligned with master list
+
+
+
+// Startup
+// subscriber changes its content
+// there is change in managers master ul
+// new subscirptions are added / old are removed
+
+
+
+UC1 Startup:
+    1. Zrób listę subskrybentów, pomijając elementy nie wspierane. Lista to objetk. listOfItems is empty for now
+    2. Dla Zrób templatkę listOfItems na podstawie master UL 
+    3. Wstaw templatkę do każdego subskrybenta
+    4. Ustaw event listenery i dodaj je do this.state
+
+UC2 Subscriber changes innerHTML:
+    procedureInitiatorIs = e.target.id
+    let newUlDescriptor = this._getUlDescriptorById(id)
+    Object.keys(this.state).forEach((id) => {
+        if (id != procedureInitiatorId) {
+            let currentElement = document.getElementById(id)
+            this.state[id].isProcessed = true; // as event will be triggered, on event listner this will be resetted to false
+            this._removeElement.call(currentElement, currentElement.querySelector('ul'))
+            currentElement.appendChild(this._makeUlFromDescirptor(newUlDescriptor))
+        }
+    })
+
+==========================
+UC 2a inna wersja
+    1. Zmien master listę na podstawie elementu generującego event
+    
+    // UC 3. jako następny krok
+
+
+{
+    sdf79a7sd9f80sa: {
+        listOfItems: [ message, id, label, isHidden ]  // is empty
+        isProcessed: // block event when this changes corresponding element
+        eventListenerCallback: // for deregistration purposes
+    }
+}
+
+UC 3. Zmiana w innerHTML 
+    let newUlDescriptor = this._getUlDescriptorFromElement(this)
+    Object.keys(this.state).forEach((id) => {
+        let currentElement = document.getElementById(id);
+        let currentElementsDescriptor = this._getUlDescriptorFromElement(currentElement)
+        if (!Comparator._areEqual(newUlDescriptor, currentElementsDescriptor)) {
+            this._changeElementsUl(currentElement)
+        }
+    })
+
+UC 4. Zmiana listy subskrybentów
+    1. Remove all subscribers 
+    2. Add all subscribers
+
+
+
+========
+
+UC2 Zmiana wewnątrz ULDW: 
+    Nie powoduje dodania kolejnego ULDW tylko zmiany w liście 
+    Sporządzam nowy objekt obrazujący stan this i porównuję ze starym
+    Jeżeli wystąpią zmiany to zmieniam każdy inny element z listy ULDW (przed zmianą ustawiam flagę isProcessed)
+
+Procedura po evencie, callback event lisenera nasłuchującego zmian w ULDW
+    let eventTargetId = e.target.getAttribute('id');
+    if (eventTargetId == undefined) {throw exception}
+    if (this.state.eventTargetId == undefined) {throw exception}
+    if (this.state[eventTargetId].isProcessed == true) {
+        this.state[eventTargetId].isProcessed = false
+    } else if (this.state[eventTargetId].isProcessed == false) {
+        let newUlItems = this._getStatesFromHTML(e.target)
+        this._changeEachSupervisedElementExceptForInitiator(procedureInitiatorId, newUlItems)
+    }
+
+Procedura zmiany pojedynczego elementu
+    let targetElement = this.shadowRgetElementById

@@ -39,6 +39,7 @@ class StateHandlingAbstractComponent extends AbstractComponent{
         }
         let mutationTarget = mutationsList[0].target;
         let getUlHtmlAfterChange = function(){
+            console.log(mutationTarget.nodeName)
             if (mutationTarget.nodeName == "LI") {return mutationTarget.parentNode;}
             else if (mutationTarget.nodeName == "UL") {return mutationTarget}
             else {return mutationTarget.querySelector('ul')}
@@ -50,6 +51,7 @@ class StateHandlingAbstractComponent extends AbstractComponent{
         let stateFromHtmlAfterChange = getStateCopyAfterChange()
         if (!Comparator.areStatesEqual(getItemsToCompare(currnetState), getItemsToCompare(stateFromHtmlAfterChange))){
             this._state.items = stateFromHtmlAfterChange
+            console.log({stateItems: this._state.items})
             this._recreateThisComponent();
             this._emitEventOnStateChange();
         }

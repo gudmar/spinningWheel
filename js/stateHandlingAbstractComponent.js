@@ -300,7 +300,7 @@ class ObjectComparator{
 
 
     static haveArraysSameValues(a, b, keyEnumerateMethod = Object.keys){
-        // Arrays are indentical in identical order. JSON.stringify cannot be used due to nested objects !!
+        // Arrays are indentical in identical order. JSON.stringify cannot be used due to nested objects !! 
         let comparationMethod = function(a, b, index){
             return doesAincludeB(a, b[index], keyEnumerateMethod)
         }

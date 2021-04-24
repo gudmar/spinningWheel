@@ -6,7 +6,7 @@
 class StateHandlingAbstractComponent extends AbstractComponent{
     constructor(){
         super()
-
+        this._getState();
     }
     _getState(){
         if (this._state == undefined) {
@@ -50,6 +50,8 @@ class StateHandlingAbstractComponent extends AbstractComponent{
         let currnetState = this._copyArrayOfObjects(this._getState().items)
         let stateFromHtmlAfterChange = getStateCopyAfterChange()
         if (!Comparator.areStatesEqual(getItemsToCompare(currnetState), getItemsToCompare(stateFromHtmlAfterChange))){
+            console.log(currnetState)
+            console.log(stateFromHtmlAfterChange)
             this._state.items = stateFromHtmlAfterChange
             console.log({stateItems: this._state.items})
             this._recreateThisComponent();
@@ -60,6 +62,7 @@ class StateHandlingAbstractComponent extends AbstractComponent{
 
     _emitEventOnStateChange(){
         let stateChangeEvent = new CustomEvent(this.COMPONENT_STATE_CHANGED);
+        console.log('Event dispatched ++++')
         this.dispatchEvent(stateChangeEvent)
     }
 
@@ -171,7 +174,14 @@ class StateHandlingAbstractComponent extends AbstractComponent{
         }
         return this.querySelectorAll('li').filter(hasNotUsedClass)
     }
-    _setElement
+
+    
+    _listToHtmlString(listOfItems, cbConvertingSilgleElementToHTMLString){
+        let listOfHtmlStrings = listOfItems.map(cbConvertingSilgleElementToHTMLString);
+        return listOfHtmlStrings.reduce((acc, item) => {
+            return acc + item;
+        })
+    }
 }
 
 

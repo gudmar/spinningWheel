@@ -59,7 +59,7 @@ class SpinningWheelComponent extends StateHandlingAbstractComponent{
             emitOnAnimationEnd(winnerIndex)
         }.bind(this)
         let hideWinner = function(winnerIndex){
-            this._changeItemInStateItems(this._getWinner(winnerIndex).id, 'isHidden', true);
+            // this._changeItemInStateItems(this._getWinner(winnerIndex).id, 'isHidden', true);
             this._addHiddenClassToNotHiddenLiAtIndex(winnerIndex)
             this._recreateThisComponent();
             
@@ -70,8 +70,8 @@ class SpinningWheelComponent extends StateHandlingAbstractComponent{
             log(angle)
             let winnerIndex = this._getWinnerIndex(angle)
             outputWinnerIndex(this._getWinner(winnerIndex).id)
+            console.log('%cWinning index :' + winnerIndex, "background-color: yellow")
             hideWinner(winnerIndex)    
-
             console.log('Line above - hide winner responsivble for hiding element !!')
         }.bind(this)
 

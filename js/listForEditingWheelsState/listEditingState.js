@@ -286,12 +286,12 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
     }
 
 
-    _listToHtmlString(listOfItems, cbConvertingSilgleElementToHTMLString){
-        let listOfHtmlStrings = listOfItems.map(cbConvertingSilgleElementToHTMLString);
-        return listOfHtmlStrings.reduce((acc, item) => {
-            return acc + item;
-        })
-    }
+    // _listToHtmlString(listOfItems, cbConvertingSilgleElementToHTMLString){
+    //     let listOfHtmlStrings = listOfItems.map(cbConvertingSilgleElementToHTMLString);
+    //     return listOfHtmlStrings.reduce((acc, item) => {
+    //         return acc + item;
+    //     })
+    // }
 
 
 }

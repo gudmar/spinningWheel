@@ -104,6 +104,7 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
     }
 
 
+
     addNextRowCallback(e) {
         let rowContainingThisAddButton = e.target.parentNode.parentNode.parentNode;
         let newRowWithListeners = this._getRowAsElementWithListeners('', '', false)
@@ -124,8 +125,17 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
     }
 
 
-    _recreateThisComponent(){
-        // Needs to be overwritten not to have a waring
+    _recreateThisComponent(isWholeListChanged){
+        if (isWholeListChanged){
+            this._removeTableContent();
+            this._placeTableBodyContentOutOfStates();
+        } else {
+            // only li inside list changed, this case is taken care of in this component manualy
+        }
+    }
+
+    _removeTableContent(){
+        this.shadowRoot.querySelector('tbody').innerHTML = '';
     }
 
 
@@ -284,14 +294,6 @@ class ListEditingStateComponent extends StateHandlingAbstractComponent{
         let convertToTd = function(item, index) { return `<${tdOrTh} ${additionalAttribs(index)}>${item}</${tdOrTh}>`}.bind(this)
         return `<tr>${this._listToHtmlString(listOfColumnContent, convertToTd)}</tr>`
     }
-
-
-    // _listToHtmlString(listOfItems, cbConvertingSilgleElementToHTMLString){
-    //     let listOfHtmlStrings = listOfItems.map(cbConvertingSilgleElementToHTMLString);
-    //     return listOfHtmlStrings.reduce((acc, item) => {
-    //         return acc + item;
-    //     })
-    // }
 
 
 }

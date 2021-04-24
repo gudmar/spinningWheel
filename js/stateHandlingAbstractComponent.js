@@ -30,34 +30,32 @@ class StateHandlingAbstractComponent extends AbstractComponent{
     }
 
     _onInnerHTMLChange(mutationsList, observer){
-        let getItemsToCompare = function(arrayOfItems){
-            let output = arrayOfItems.map((item) => {
-                const {label, isHidden, message} = item
-                return {label, isHidden, message}
-            })
-            return output
-        }
-        let mutationTarget = mutationsList[0].target;
-        let mutationNodeName = mutationTarget.nodeName;
-        let getUlHtmlAfterChange = function(){
-            if (mutationNodeName == "LI") {return mutationTarget.parentNode;}
-            else if (mutationNodeName == "UL") {return mutationTarget}
-            else {return mutationTarget.querySelector('ul')}
-        }
-        let shouldWholeElementBeRecreated = mutationNodeName != 'LI' ? true : false;
-        let getStateCopyAfterChange = function(){
-            return  this._copyArrayOfObjects(this._getListOfEntriesFromInnerHTML.call(getUlHtmlAfterChange(mutationTarget)))
-        }.bind(this)
-        let currnetState = this._copyArrayOfObjects(this._getState().items)
-        let stateFromHtmlAfterChange = getStateCopyAfterChange()
-        console.log(this)
-        console.log(getItemsToCompare(currnetState))
-        console.log(getItemsToCompare(stateFromHtmlAfterChange))
-        console.log(!Comparator.areStatesEqual(getItemsToCompare(currnetState), getItemsToCompare(stateFromHtmlAfterChange)))
-        if (!Comparator.areStatesEqual(getItemsToCompare(currnetState), getItemsToCompare(stateFromHtmlAfterChange))){
-            this._state.items = stateFromHtmlAfterChange
-            this._recreateThisComponent(shouldWholeElementBeRecreated);
-            this._emitEventOnStateChange();
+        if (this.querySelector('ul') != null){
+            let getItemsToCompare = function(arrayOfItems){
+                let output = arrayOfItems.map((item) => {
+                    const {label, isHidden, message} = item
+                    return {label, isHidden, message}
+                })
+                return output
+            }
+            let mutationTarget = mutationsList[0].target;
+            let mutationNodeName = mutationTarget.nodeName;
+            let getUlHtmlAfterChange = function(){
+                if (mutationNodeName == "LI") {return mutationTarget.parentNode;}
+                else if (mutationNodeName == "UL") {return mutationTarget}
+                else {return mutationTarget.querySelector('ul')}
+            }
+            let shouldWholeElementBeRecreated = mutationNodeName != 'LI' ? true : false;
+            let getStateCopyAfterChange = function(){
+                return  this._copyArrayOfObjects(this._getListOfEntriesFromInnerHTML.call(getUlHtmlAfterChange(mutationTarget)))
+            }.bind(this)
+            let currnetState = this._copyArrayOfObjects(this._getState().items)
+            let stateFromHtmlAfterChange = getStateCopyAfterChange()
+            if (!Comparator.areStatesEqual(getItemsToCompare(currnetState), getItemsToCompare(stateFromHtmlAfterChange))){
+                this._state.items = stateFromHtmlAfterChange
+                this._recreateThisComponent(shouldWholeElementBeRecreated);
+                this._emitEventOnStateChange();
+            }
         }
     }
 
@@ -118,6 +116,7 @@ class StateHandlingAbstractComponent extends AbstractComponent{
 
     _getListOfEntriesFromInnerHTML() {
         let allItems = this.querySelectorAll('li');
+        if (allItems == null) return null;
         let getObjectFromSingleEntry = function (item, index) {
             let labelAttribute = item.getAttribute('data-label');
             labelAttribute = labelAttribute == undefined || labelAttribute == null ? index.toString() : labelAttribute;

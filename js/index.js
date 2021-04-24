@@ -18,10 +18,12 @@ class ManySpinningWheelsAdder{
     getButtonId(id){
         return `${id}-button`
     }
+    getWrapperId(id) {
+        return `${id}-arepper`
+    }
 
     placeAllElements(whereId){
         let element = this.getElementFromString(this.getAllElementsAsString())
-        console.log(element)
         document.getElementById(whereId).appendChild(element)
     }
 
@@ -34,7 +36,7 @@ class ManySpinningWheelsAdder{
     getAllElementsAsString(){
         let itemsAsString = ''
         for (let i = 0; i < this.nrOfWheels; i++){
-            itemsAsString = itemsAsString + this.singleElementTemplate(i, this.getDummyUlContentAsString())
+            itemsAsString = itemsAsString + this.singleElementTemplate(i,)
         }
         return itemsAsString
     }
@@ -59,23 +61,37 @@ class ManySpinningWheelsAdder{
         for (let i = 0; i < this.nrOfWheels; i++){
             let currentButton = document.getElementById(this.getButtonId(i));
             let openingFunction = openEditorInstance.call(this, i).openEditor
-            console.log(openingFunction)
             currentButton.addEventListener('click', openingFunction)
         }
     }
 
-    singleElementTemplate(id, content){
+    addMediatorsToEachWrapper(){
+        let allWrappers = document.querySelectorAll('.wheel-edit-wrapper');
+        let singleMediatorAsString = function(id){
+            return `
+            <wheel-alike-components-mediator data-subscribers-ids = "${this.getEditorId(id)}, ${this.getWheelId(id)}" id = "${this.getMediatorId(id)}">
+                <ul></ul>
+            </wheel-alike-components-mediator>
+            `
+        }.bind(this)
+        let addMediatorToSingleWrapper = function(item, id){
+            let mediatorsParent = document.getElementById(this.getWrapperId(id))
+            mediatorsParent.appendChild(this.getElementFromString(singleMediatorAsString(id)));
+            document.getElementById(this.getMediatorId(id)).innerHTML = this.getDummyUlContentAsString()
+        }.bind(this)
+       allWrappers.forEach(addMediatorToSingleWrapper)
+    }
+
+    singleElementTemplate(id){
         return `
-            <div class = "wheel-edit-wrapper">
-                <spinning-wheel id = ${this.getWheelId}></spinning-wheel>
+            <div class = "wheel-edit-wrapper" id = ${this.getWrapperId(id)}>
+                <spinning-wheel-info id = ${this.getWheelId(id)}><ul></ul></spinning-wheel-info>
                 <modal-content-change-watcher data-visible=false id = ${this.getModalId(id)}>
-                    <editing-wheel-state-list id = ${this.getEditorId}>
+                    <editing-wheel-state-list id = ${this.getEditorId(id)}>
+                        <ul></ul>
                     </editing-wheel-state-list>
                 </modal-content-change-watcher>
                 <custom-button id = ${this.getButtonId(id)} data-label="Clear console"  value="show" ></custom-button>
-                <wheel-alike-components-mediator data-subscribers-ids = "${this.getEditorId}, ${this.getWheelId}" id = "${this.getMediatorId(id)}">
-                    ${content}
-                </wheel-alike-components-mediator>
             </div>
         `
     }

@@ -1,11 +1,16 @@
 class WheelControlWrapper extends StateHandlingAbstractComponent {
     constructor(){
         super();
-        this.supportedNodeNames = ['SPINNING-WHEEL', 'EDITING-WHEEL-STATE-LIST']
+        this.supportedNodeNames = ['SPINNING-WHEEL', 'SPINNING-WHEEL-INFO', 'EDITING-WHEEL-STATE-LIST']
+
+    }
+
+    connectedCallback(){
         this.subscribersStates = this._getSubscribersStates()
-        
+        if (this.querySelector('ul') == null) return null
+        if (this.querySelector('li') == null) return null
         this._updateEachSubscriberOnThisInnerHtmlChange()
-        this._addEventListenersToEachSubscribent();
+        this._addEventListenersToEachSubscribent();                
     }
 
 
@@ -14,6 +19,8 @@ class WheelControlWrapper extends StateHandlingAbstractComponent {
             this._restartManager();
             return null
         }
+        if (this.querySelector('ul') == null) return null
+        if (this.querySelector('li') == null) return null
 
         let getItemsToCompare = function(arrayOfItems){
             let output = arrayOfItems.map((item) => {

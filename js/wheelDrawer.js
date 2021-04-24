@@ -4,6 +4,7 @@
 
 class SvgWheelCreator{
     constructor(diameter){
+        console.log(diameter)
         this._setState(diameter);
         this.template = document.createElement('template')
         this.circleGroupSelector = 'spinCircleGroupId'
@@ -15,7 +16,8 @@ class SvgWheelCreator{
     }
 
 
-    _setState(diameter = 600){
+    _setState(diameter = 400){
+        diameter = parseInt(diameter)
         if (this.state == undefined) {
             this.state = {}
         }

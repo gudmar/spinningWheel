@@ -5,7 +5,6 @@ class ModalContentChangeWatcher extends Modal {
             if (this._getShadowWrappedElement().innerHTML != this._getWrappedElement().innerHTML) {
                 this._getWrappedElement().innerHTML = this._getShadowWrappedElement().innerHTML
             } else {
-                console.log('ModalContetChangeWatcher content is equal')
             }
         }.bind(this)
         this._watchForContentElementChanges()
@@ -13,13 +12,10 @@ class ModalContentChangeWatcher extends Modal {
 
     _onInnerHTMLChange() {
         if (this._getShadowWrappedElement().innerHTML != this._getWrappedElement().innerHTML) {
-            // console.log(this._getShadowWrappedElement().innerHTML)
-            // console.log(this._getWrappedElement().innerHTML)
             this._stopWatchingForContentElementChanges();
             this.content.innerHTML = this.innerHTML
             this._watchForContentElementChanges(); 
         } else {
-            console.log('ModalContetChangeWatcher onInnerHTMLChange content is equal')
         }
     }
 

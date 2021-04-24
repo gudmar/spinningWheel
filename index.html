@@ -12,11 +12,13 @@
     <script src="./js/reusableNotWheelRelated/button.js" defer></script>
     <script src="./js/reusableNotWheelRelated/modal.js" defer></script>
     <script src="./js/modalContentWatcher.js" defer></script>
+    <script src="./js/reusableNotWheelRelated/infoModal.js" defer></script>
     <script src="./js/colorGenerator.js" defer></script>
     <script src="./js/reusableNotWheelRelated/colorPresenter.js" defer></script>
     <script src="./js/stateHandlingAbstractComponent.js" defer></script>
     <script src="./js/wheelDrawer.js" defer></script>
     <script src="./js/spinningWheelComponent.js" defer></script>
+    <script src="./js/spinningWheelWithInfoComponent.js" defer></script>
     <script src="./js/testWheelStatistic/testStatisticsSpinningWheelComponent.js" defer></script>
     <script src="./js/testWheelStatistic/countWinningStatistics.js" defer></script>
     <script src="./js/listForEditingWheelsState/listEditingState.js" defer></script>
@@ -28,33 +30,7 @@
 <body>
     <hidable-modal id = "modal-colors"><color-presenter></color-presenter></hidable-modal>
     <hidable-modal id = "modal-statistics" data-visible=false><winnig-statistics data-nr-of-executions = "100" ></winnig-statistics></hidable-modal>
-    <!-- <modal-content-change-watcher data-visible=true id = "modal-edit">
-        <editing-wheel-state-list id = "editng-wheel-editor-id">
-            <ul>
-                <li>Content 1</li>
-                <li data-label = 'option 2'>Some longer message</li>
-                <li>Content 3</li>
-                <li>Content 4</li>
-                <li>Content 5</li>
-                <li>Content 6</li>
-                <li>Content 7</li>
-                <li>Content 8</li>
-                <li>Content 9</li>
-                <li>Content 10</li>
-                <li>Content 1</li>
-                <li>Content 2</li>
-                <li>Content 3</li>
-                <li>Content 4</li>
-                <li>Content 5</li>
-                <li>Content 6</li>
-                <li>Content 7</li>
-                <li>Content 8</li>
-                <li>Content 9</li>
-                <li>Content 10</li>
 
-            </ul>
-        </editing-wheel-state-list>
-    </modal-content-change-watcher> -->
     <div id="menu">
         <custom-button data-label="Present colors" value="show" onClick="showModal('modal-colors')"></custom-button>
         <custom-button data-label="Statistics"  value="show" onClick="showModal('modal-statistics')"></custom-button>
@@ -67,29 +43,12 @@
     <div id = "wheelContainerId">
 
     </div>
-    <!-- <spinning-wheel id = 'spinning-wheel-id'>
-        <ul>
-
-            <li>2</li>
-            <li>2</li>
-            <li>2</li>
-
-        </ul>
-    </spinning-wheel> -->
-    <!-- <editing-wheel-state-list id = "editng-wheel-editor-id2"><ul><li></li></ul></editing-wheel-state-list>
-    <spinning-wheel id = 'spinning-wheel-id2'><ul></ul></spinning-wheel>
- <wheel-alike-components-mediator data-subscribers-ids='editng-wheel-editor-id,spinning-wheel-id,editng-wheel-editor-id2,spinning-wheel-id2' id = "mediator-id">
-    <ul>
-        <li>Message 3</li>
-        <li>Message 3</li>
-        <li>Message 3</li>
-    </ul>
-</wheel-alike-components-mediator>  -->
 
     <script>
         window.addEventListener('DOMContentLoaded', () => {
             let spinnersAdder = new ManySpinningWheelsAdder(4);
             spinnersAdder.placeAllElements('wheelContainerId');
+            spinnersAdder.addMediatorsToEachWrapper()
             spinnersAdder.activateButtons();
         })
 

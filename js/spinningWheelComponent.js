@@ -7,7 +7,7 @@
 
 class SpinningWheelComponent extends StateHandlingAbstractComponent{
 
-    constructor(){
+    constructor(afterSpinCallback = async ({winnerLabel, winnerMessage}) => {return new Promise((resolve) => {resolve(true)})}){
         super()
         this.animationSettings = {
             interval: 1,
@@ -18,8 +18,8 @@ class SpinningWheelComponent extends StateHandlingAbstractComponent{
             maxInterval: 300,
             animationRejectAfterSeconds: 10
         }
-        this.diameter = 600;
-
+        this.diameter = 300;
+        this.afterSpinCallback = afterSpinCallback;
         this._addSpinningWheel();
     }
 
@@ -74,7 +74,12 @@ class SpinningWheelComponent extends StateHandlingAbstractComponent{
             log(angle)
             let winnerIndex = this._getWinnerIndex(angle)
             outputWinnerIndex(this._getWinner(winnerIndex).id) 
+            console.log(this._getWinner(winnerIndex))
+            console.log(angle)
+            console.log(winnerIndex)
+            await this.afterSpinCallback({winnerLabel: this._getWinner(winnerIndex).label, winnerMessage: this._getWinner(winnerIndex).message})
             hideWinner(winnerIndex)    
+            resolve(true)
         }.bind(this)
 
         return new Promise(promiseCB) 
@@ -144,13 +149,13 @@ class SpinningWheelComponent extends StateHandlingAbstractComponent{
 
     _getWheelCreator() {
         if (this.wheelCreator == undefined) {
+            console.log(this.diameter)
             this.wheelCreator = new SvgWheelCreator(this.diameter);
         }
         return this.wheelCreator
     }
 
     _getTemplate(){
-        let wheelCreator = this._getWheelCreator();
         let output = `
             <style>
                 .center{

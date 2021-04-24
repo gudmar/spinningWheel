@@ -6,8 +6,6 @@ class WheelControlWrapper extends StateHandlingAbstractComponent {
         
         this._updateEachSubscriberOnThisInnerHtmlChange()
         this._addEventListenersToEachSubscribent();
-        console.log({subscribersStates: this.subscribersStates})
-        console.error('Problem after clicking Change mediator button. Means that changing mediators innerHtml causes a problem')
     }
 
 
@@ -33,12 +31,9 @@ class WheelControlWrapper extends StateHandlingAbstractComponent {
         let getStateCopyAfterChange = function(){
             return  this._copyArrayOfObjects(this._getListOfEntriesFromInnerHTML.call(getUlHtmlAfterChange(mutationTarget)))
         }.bind(this)
-        console.log(getItemsToCompare(this._getState().items))
-        console.log(getItemsToCompare(getStateCopyAfterChange()))
         let currnetState = this._copyArrayOfObjects(this._getState().items)
         let stateFromHtmlAfterChange = getStateCopyAfterChange()
         if (!Comparator.areStatesEqual(getItemsToCompare(currnetState), getItemsToCompare(stateFromHtmlAfterChange))){
-            console.log('Objects are not equal')
             this._state.items = stateFromHtmlAfterChange
             this._recreateThisComponent();
             this._emitEventOnStateChange();
@@ -46,7 +41,6 @@ class WheelControlWrapper extends StateHandlingAbstractComponent {
             this._updateEachSubscriberOnThisInnerHtmlChange()
             this._addEventListenersToEachSubscribent();
         }
-        console.log(mutationsList)
     }
 
 
@@ -66,7 +60,6 @@ class WheelControlWrapper extends StateHandlingAbstractComponent {
 
 
     _addEventListenersToEachSubscribent(){
-        console.log(this.subscribersStates)
         for(let subscriber in this.subscribersStates){
             document.getElementById(subscriber).addEventListener(this.COMPONENT_STATE_CHANGED, this.subscribersStates[subscriber].eventListenerCallback)
         }
@@ -85,7 +78,6 @@ class WheelControlWrapper extends StateHandlingAbstractComponent {
         let validSubscribers = {};
         let fillSubscribers = function(id) {
             let currentElement = document.getElementById(id);
-            console.log(currentElement.nodeName)
             if (this.supportedNodeNames.includes(currentElement.nodeName)) {
                 validSubscribers[id] = (this._getSubscriberDescriptor(currentElement))
             }
@@ -107,14 +99,9 @@ class WheelControlWrapper extends StateHandlingAbstractComponent {
     _updateEachSubscriberOnThisInnerHtmlChange() {
         let newUlDescriptor = this._getTargetsListOfDescriptors(this)
         let updateSingleSubscriber = function(id) {
-            // if (id != procedureInitiatorId) {
-                let currentElement = document.getElementById(id)
-                console.log(currentElement)
-                // this.subscribersStates[id].isProcessed = true; // as event will be triggered, on event listner this will be resetted to false
-                this._changeTargetElementsUlElement(currentElement, newUlDescriptor)
-            // }
+            let currentElement = document.getElementById(id)
+            this._changeTargetElementsUlElement(currentElement, newUlDescriptor)
         }.bind(this)
-        console.log(this.subscribersStates)
         Object.keys(this.subscribersStates).forEach((id) => {updateSingleSubscriber(id)})      
     }
 
@@ -124,15 +111,8 @@ class WheelControlWrapper extends StateHandlingAbstractComponent {
         let newUlDescriptor = this._getTargetsListOfDescriptors(event.target)
         let currentDescriptor = this._getTargetsListOfDescriptors(this)
         if (!Comparator.areStatesEqual(newUlDescriptor, currentDescriptor)){
-            console.log('states Changed ---------------')
             this._changeTargetElementsUlElement(this, newUlDescriptor)
-        }  // CHANGED
-        // if (this.subscribersStates[procedureInitiatorId].isProcessed) {
-        //     this.subscribersStates[procedureInitiatorId].isProcessed = false;
-        // } else if (!Comparator.areStatesEqual(newUlDescriptor, currentDescriptor)){
-        //     this._changeTargetElementsUlElement(this, newUlDescriptor)
-        //     // _emitEventOnStateChange();
-        // }
+        }  
     }
 
 
@@ -143,13 +123,12 @@ class WheelControlWrapper extends StateHandlingAbstractComponent {
 
 
     _makeUlFromDescirptor(ulDescriptor){
-        console.log(ulDescriptor)
         return `<ul>${this._listToHtmlString(ulDescriptor, this._createSingleLiFromStateItemAsString.bind(this))}</ul>`
     }
 
 
     _getTargetsListOfDescriptors(element){
-        console.warn(`${this.constructor.name}: case when this is null not supported / test for ul not nested`)
+        // console.warn(`${this.constructor.name}: case when this is null not supported / test for ul not nested`)
         let listOfListElements = element.querySelectorAll('li');
         let getLiDescriptor = this._getSingleLiDescriptor.bind(this)
         return Array.from(listOfListElements).map(getLiDescriptor)

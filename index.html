@@ -65,9 +65,12 @@
     </div>
     <spinning-wheel id = 'spinning-wheel-id'>
         <ul>
-            <li data-label = "label 1">Option 1</li>
+            <!-- <li data-label = "label 1">Option 1</li>
             <li>2</li>
             <li>Option 3</li> -->
+            <li>2</li>
+            <li>2</li>
+            <li>2</li>
             <!-- <li>4</li>
             <li>Option 5</li>
             <li>6</li>
@@ -85,15 +88,15 @@
             <li>6</li> -->
         </ul>
     </spinning-wheel>
-<wheel-alike-components-mediator data-subscribers-ids='editng-wheel-editor-id,spinning-wheel-id' id = "mediator-id">
+    <editing-wheel-state-list id = "editng-wheel-editor-id2"><ul><li></li></ul></editing-wheel-state-list>
+    <spinning-wheel id = 'spinning-wheel-id2'><ul></ul></spinning-wheel>
+ <wheel-alike-components-mediator data-subscribers-ids='editng-wheel-editor-id,spinning-wheel-id,editng-wheel-editor-id2,spinning-wheel-id2' id = "mediator-id">
     <ul>
-        <li data-label="lab 1">Message 1</li>
-        <li data-label="lab 2">Message 2</li>
         <li>Message 3</li>
-        <!-- <li>message 4</li>
-        <li>message 4</li> -->
+        <li>Message 3</li>
+        <li>Message 3</li>
     </ul>
-</wheel-alike-components-mediator>
+</wheel-alike-components-mediator> 
 
     <script>
         function showModal(id){
@@ -103,7 +106,7 @@
             document.getElementById(id).children[0].innerHTML = `
                     <ul>
                         <li>some 1</li>
-                        <li>some 2</li>
+                        <li>some 1</li>
                     </ul>
                 `
         }
@@ -112,8 +115,7 @@
             <ul>
                         <li>some 1</li>
                         <li>some 2</li>
-                        <li>some 1</li>
-                        <li>some 2</li>
+
                     </ul>
                 `
         }

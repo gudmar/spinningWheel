@@ -39,7 +39,6 @@ class StateHandlingAbstractComponent extends AbstractComponent{
         }
         let mutationTarget = mutationsList[0].target;
         let getUlHtmlAfterChange = function(){
-            console.log(mutationTarget.nodeName)
             if (mutationTarget.nodeName == "LI") {return mutationTarget.parentNode;}
             else if (mutationTarget.nodeName == "UL") {return mutationTarget}
             else {return mutationTarget.querySelector('ul')}
@@ -49,11 +48,9 @@ class StateHandlingAbstractComponent extends AbstractComponent{
         }.bind(this)
         let currnetState = this._copyArrayOfObjects(this._getState().items)
         let stateFromHtmlAfterChange = getStateCopyAfterChange()
+
         if (!Comparator.areStatesEqual(getItemsToCompare(currnetState), getItemsToCompare(stateFromHtmlAfterChange))){
-            console.log(currnetState)
-            console.log(stateFromHtmlAfterChange)
             this._state.items = stateFromHtmlAfterChange
-            console.log({stateItems: this._state.items})
             this._recreateThisComponent();
             this._emitEventOnStateChange();
         }
@@ -62,7 +59,6 @@ class StateHandlingAbstractComponent extends AbstractComponent{
 
     _emitEventOnStateChange(){
         let stateChangeEvent = new CustomEvent(this.COMPONENT_STATE_CHANGED);
-        console.log('Event dispatched ++++')
         this.dispatchEvent(stateChangeEvent)
     }
 
@@ -191,7 +187,7 @@ class StateHandlingAbstractComponent extends AbstractComponent{
 class Comparator{
 
     static areStatesEqual(a, b) {
-        return ObjectComparator.areEqualEnumerableArrayValuesCompare(a, b)
+        return ObjectComparator.areEqualEnumerable(a, b)
     }
 
     static findAddedIndexes(currnetState, stateFromHtmlAfterChange){
@@ -408,6 +404,7 @@ class ObjectComparator{
                 }
             }
         } catch (e) {
+            console.log('%ccompareSpecialNumberValues error', 'background-color: red; color: white')
         }
     }
 

@@ -13,8 +13,8 @@ class ModalContentChangeWatcher extends Modal {
 
     _onInnerHTMLChange() {
         if (this._getShadowWrappedElement().innerHTML != this._getWrappedElement().innerHTML) {
-            console.log(this._getShadowWrappedElement().innerHTML)
-            console.log(this._getWrappedElement().innerHTML)
+            // console.log(this._getShadowWrappedElement().innerHTML)
+            // console.log(this._getWrappedElement().innerHTML)
             this._stopWatchingForContentElementChanges();
             this.content.innerHTML = this.innerHTML
             this._watchForContentElementChanges(); 

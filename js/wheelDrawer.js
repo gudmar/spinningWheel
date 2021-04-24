@@ -128,7 +128,7 @@ class SvgWheelCreator{
         let positionCounter = function(factor) {
             const VARIABLE = 0.4;
             if (index == 0) {
-                console.warn('this VARIABLE is to be parametrized, or alg. needs to be changed. VARIABLE is better smaller for bigger wheels or more inputs')
+                // console.warn('this VARIABLE is to be parametrized, or alg. needs to be changed. VARIABLE is better smaller for bigger wheels or more inputs')
             }
             return this._polarToCartesian(parseFloat(circleX), parseFloat(circleY), parseFloat(circleR) * factor, angle * (VARIABLE + index) +10);
         }.bind(this)

@@ -20,14 +20,15 @@
     <script src="./js/testWheelStatistic/testStatisticsSpinningWheelComponent.js" defer></script>
     <script src="./js/testWheelStatistic/countWinningStatistics.js" defer></script>
     <script src="./js/listForEditingWheelsState/listEditingState.js" defer></script>
+    <script src="./js/wrapWheelAndServingWidgets/wheelManager.js" defer></script>
 
 
 </head>
 <body>
     <hidable-modal id = "modal-colors"><color-presenter></color-presenter></hidable-modal>
     <hidable-modal id = "modal-statistics" data-visible=false><winnig-statistics data-nr-of-executions = "100" ></winnig-statistics></hidable-modal>
-    <modal-content-change-watcher id = "modal-edit" data-visible=true>
-        <editing-wheel-state-list>
+    <modal-content-change-watcher data-visible=true id = "modal-edit">
+        <editing-wheel-state-list id = "editng-wheel-editor-id">
             <ul>
                 <li>Content 1</li>
                 <li data-label = 'option 2'>Some longer message</li>
@@ -57,9 +58,12 @@
         <custom-button data-label="Present colors" value="show" onClick="showModal('modal-colors')"></custom-button>
         <custom-button data-label="Statistics"  value="show" onClick="showModal('modal-statistics')"></custom-button>
         <custom-button data-label="Edit Wheel"  value="show" onClick="showModal('modal-edit')"></custom-button>
-        <custom-button data-label="addInner"  value="show" onClick="addInnerHTML('modal-edit')"></custom-button>
+        <custom-button data-label="changeEdit"  value="show" onClick="addInnerHTML('modal-edit')"></custom-button>
+        <custom-button data-label="changeWheel"  value="show" onClick="addInnerHTMLToMediator('spinning-wheel-id')"></custom-button>
+        <custom-button data-label="Change mediator"  value="show" onClick="addInnerHTMLToMediator('mediator-id')"></custom-button>
+        <custom-button data-label="Clear console"  value="show" onClick="console.clear()"></custom-button>
     </div>
-    <spinning-wheel>
+    <spinning-wheel id = 'spinning-wheel-id'>
         <ul>
             <li data-label = "label 1">Option 1</li>
             <li>2</li>
@@ -81,7 +85,15 @@
             <li>6</li> -->
         </ul>
     </spinning-wheel>
-
+<wheel-alike-components-mediator data-subscribers-ids='editng-wheel-editor-id,spinning-wheel-id' id = "mediator-id">
+    <ul>
+        <li data-label="lab 1">Message 1</li>
+        <li data-label="lab 2">Message 2</li>
+        <li>Message 3</li>
+        <!-- <li>message 4</li>
+        <li>message 4</li> -->
+    </ul>
+</wheel-alike-components-mediator>
 
     <script>
         function showModal(id){
@@ -95,7 +107,19 @@
                     </ul>
                 `
         }
+        function addInnerHTMLToMediator(id){
+            document.getElementById(id).innerHTML = `
+            <ul>
+                        <li>some 1</li>
+                        <li>some 2</li>
+                        <li>some 1</li>
+                        <li>some 2</li>
+                    </ul>
+                `
+        }
     </script>
     
 </body>
 </html>
+
+

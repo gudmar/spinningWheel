@@ -78,6 +78,10 @@ class WheelControlWrapper extends StateHandlingAbstractComponent {
         let validSubscribers = {};
         let fillSubscribers = function(id) {
             let currentElement = document.getElementById(id);
+            if (currentElement == null || currentElement == undefined) {
+                console.warn(`${this.constructor.name}: Element with id ${id} not found`)
+                return ''
+            }
             if (this.supportedNodeNames.includes(currentElement.nodeName)) {
                 validSubscribers[id] = (this._getSubscriberDescriptor(currentElement))
             }

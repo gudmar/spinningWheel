@@ -4,7 +4,6 @@
 
 class SvgWheelCreator{
     constructor(diameter){
-        console.log(diameter)
         this._setState(diameter);
         this.template = document.createElement('template')
         this.circleGroupSelector = 'spinCircleGroupId'
@@ -156,7 +155,7 @@ class SvgWheelCreator{
         let generatedColors = gen.createListOfColors();
         let targetElement = this.template.querySelector('g')
         let colorIterator = gen.createIterator()
-        let angle = (360 / stateItems.length)==360?359.999:360/stateItems.length;
+        let angle = (360 / stateItems.length)==360?359.9:360/stateItems.length;
         let {circleX, circleY, circleR} = this.state
 
         let addOneArc = function(item, index) {

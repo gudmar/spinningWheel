@@ -82,6 +82,30 @@ class ManySpinningWheelsAdder{
        allWrappers.forEach(addMediatorToSingleWrapper)
     }
 
+
+    addMasterMediatorForAllMediatorObjects(){
+        let getDataSubscribersIdsOfAllMediators = function(){
+            let output = []
+            for(let i = 0; i < this.nrOfWheels; i++) {
+                output.push(this.getMediatorId(i))
+            }
+            return output.join(', ')
+        }.bind(this)
+        let mediator = document.createElement('wheel-alike-components-mediator')
+        console.log('before appending')
+        document.querySelector('body').appendChild(mediator)
+        console.log('after appending')
+        mediator.innerHTML = `
+            <ul>
+                <li data-label="1">1</li>
+                <li data-label="2">1</li>
+                <li data-label="3">1</li>
+            </ul>
+        `
+        mediator.setAttribute('data-subscribers-ids', getDataSubscribersIdsOfAllMediators())
+        mediator.setAttribute('id', 'master-mediator-id')
+    }
+
     singleElementTemplate(id){
         return `
             <div class = "wheel-edit-wrapper" id = ${this.getWrapperId(id)}>

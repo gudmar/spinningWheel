@@ -28,7 +28,7 @@ class SpinningWheelComponent extends StateHandlingAbstractComponent{
     //     console.log("SPINNING WHEEL ADDED")
     // }
 
-    _getNewState() {
+    _setNewState() {
         this._state.items = undefined;
         this._getState();
     }
@@ -58,8 +58,8 @@ class SpinningWheelComponent extends StateHandlingAbstractComponent{
             this.setAttribute('data-winnerIndex', winnerIndex)
         }.bind(this)
         let log = function(message) {
-            console.log(`And the winner is: ${this._getWinner(message).label}`)
-            console.log(`Winning message: ${this._getWinner(message).message}`)
+            console.log(`And the winner is: ${this._getWinnerDescriptorFromAngle(message).label}`)
+            console.log(`Winning message: ${this._getWinnerDescriptorFromAngle(message).message}`)
         }.bind(this)
         let outputWinnerIndex = function(winnerIndex) {
             setParameterOnAnimationEnd(winnerIndex)
@@ -73,11 +73,8 @@ class SpinningWheelComponent extends StateHandlingAbstractComponent{
             let angle = await this._animate();
             log(angle)
             let winnerIndex = this._getWinnerIndex(angle)
-            outputWinnerIndex(this._getWinner(winnerIndex).id) 
-            console.log(this._getWinner(winnerIndex))
-            console.log(angle)
-            console.log(winnerIndex)
-            await this.afterSpinCallback({winnerLabel: this._getWinner(winnerIndex).label, winnerMessage: this._getWinner(winnerIndex).message})
+            outputWinnerIndex(this._getWinnerDescriptorFromAngle(angle).id) 
+            await this.afterSpinCallback({winnerLabel: this._getWinnerDescriptorFromAngle(angle).label, winnerMessage: this._getWinnerDescriptorFromAngle(angle).message})
             hideWinner(winnerIndex)    
             resolve(true)
         }.bind(this)
@@ -90,7 +87,7 @@ class SpinningWheelComponent extends StateHandlingAbstractComponent{
         htmlItems[index].classList.add('hidden')
     }
 
-    _getWinner(totalAngle) {
+    _getWinnerDescriptorFromAngle(totalAngle) {
         let itemList = this._getStateNotHiddenItems();
         return itemList[this._getWinnerIndex(totalAngle)]
     }
@@ -143,13 +140,13 @@ class SpinningWheelComponent extends StateHandlingAbstractComponent{
 
     _recreateThisComponent(newStateItems = this._state.items){
         this._removeElement(this.shadowRoot.querySelector('svg'))
+        this._setNewState();
         this._addSpinningWheel(newStateItems);
-        this._getNewState();
+        // this._setNewState();
     }
 
     _getWheelCreator() {
         if (this.wheelCreator == undefined) {
-            console.log(this.diameter)
             this.wheelCreator = new SvgWheelCreator(this.diameter);
         }
         return this.wheelCreator

@@ -15,11 +15,11 @@ class ColorGenerator{
     }
 
     generateColor(indexOfColor){
-        let offset = Math.floor(indexOfColor/7);
+        let offset = Math.floor(indexOfColor/8);
         let rgbMask = this._getIngrediances(indexOfColor)
-        if (indexOfColor % 7 == 0) {
-            offset--;
-        }
+        // if (indexOfColor % 7 == 0) {
+        //     offset--;
+        // }
         let colorValue = Math.floor(255 / (offset*0.7 + 1))
         colorValue = 255 - Math.floor(255 / (this.seed / 7))*offset;
         return {r: rgbMask.r?colorValue:0, g: rgbMask.g?colorValue:0, b: rgbMask.b?colorValue:0}

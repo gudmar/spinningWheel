@@ -1,16 +1,30 @@
 class WheelControlWrapper extends StateHandlingAbstractComponent {
     constructor(){
         super();
-        this.supportedNodeNames = ['SPINNING-WHEEL', 'SPINNING-WHEEL-INFO', 'EDITING-WHEEL-STATE-LIST']
+        this.supportedNodeNames = ['SPINNING-WHEEL', 'SPINNING-WHEEL-INFO', 'EDITING-WHEEL-STATE-LIST', 'WHEEL-ALIKE-COMPONENTS-MEDIATOR']
+    }
 
+    static get observedAttributes() {
+        return ['data-subscribers-ids']
+    }
+
+    attributeChangedCallback(attrName, oldVal, newVal){
+        if (attrName == 'data-subscribers-ids'){
+            this._restartManager();
+        }
     }
 
     connectedCallback(){
+        console.log('I am connected callbvack')
         this.subscribersStates = this._getSubscribersStates()
         if (this.querySelector('ul') == null) return null
         if (this.querySelector('li') == null) return null
         this._updateEachSubscriberOnThisInnerHtmlChange()
         this._addEventListenersToEachSubscribent();                
+    }
+
+    disconnectedCallback(){
+        this._removeManager();
     }
 
 
@@ -40,6 +54,9 @@ class WheelControlWrapper extends StateHandlingAbstractComponent {
         }.bind(this)
         let currnetState = this._copyArrayOfObjects(this._getState().items)
         let stateFromHtmlAfterChange = getStateCopyAfterChange()
+        console.log(this)
+        console.log(currnetState)
+        console.log(stateFromHtmlAfterChange)
         if (!Comparator.areStatesEqual(getItemsToCompare(currnetState), getItemsToCompare(stateFromHtmlAfterChange))){
             this._state.items = stateFromHtmlAfterChange
             this._recreateThisComponent();
@@ -52,12 +69,16 @@ class WheelControlWrapper extends StateHandlingAbstractComponent {
 
 
     _restartManager(){
+        this._removeManager()
+        this.subscribersStates = this._getSubscribersStates()
+        this._addEventListenersToEachSubscribent();
+    }
+
+    _removeManager(){
         this._removeEventListenersFromEachSubscriber();
         this._state = undefined;
         this._getState();
         this.subscribersStates = undefined;
-        this.subscribersStates = this._getSubscribersStates()
-        this._addEventListenersToEachSubscribent();
     }
 
 
@@ -128,7 +149,12 @@ class WheelControlWrapper extends StateHandlingAbstractComponent {
 
 
     _changeTargetElementsUlElement(targetElement, newUlDescriptor) {
-        this._removeElement.call(targetElement, targetElement.querySelector('ul'))
+        // console.log(this)
+        try{
+            this._removeElement.call(targetElement, targetElement.querySelector('ul'))
+        } catch(e) {
+            // ul element already does not exist
+        }
         targetElement.appendChild(this._stringToElement(this._makeUlFromDescirptor(newUlDescriptor)))
     }
 
@@ -179,6 +205,7 @@ class WheelControlWrapper extends StateHandlingAbstractComponent {
                     display: none;
                 }
             </style>
+            <ul></ul>
         `
     }
 }

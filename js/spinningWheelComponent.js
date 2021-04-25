@@ -161,6 +161,9 @@ class SpinningWheelComponent extends StateHandlingAbstractComponent{
                     align-items: center;
                     align-content: center;
                 }
+                g{
+                    cursor: pointer;
+                }
                 .wrapper{
                     position: relative;
                 }

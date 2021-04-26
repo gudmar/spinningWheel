@@ -1,7 +1,7 @@
 body{
     background-color: rgb(220, 220, 220);
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: flex-start;
     align-content: flex-start;
 }
@@ -35,6 +35,24 @@ body{
 .row{
     flex-direction: row;
 }
+
 custom-button{
+    position: relative;
     margin: 0.5rem;
+    width: 100px;
+}
+.wheel-edit-wrapper{
+    width: 350px;
+    margin: 50px;
+}
+
+#menu{
+    width: 99vw;
+    flex-direction: row;
+}
+
+#wheelContainerId{
+    width: 99vw;
+    flex-wrap: wrap;
+    
 }

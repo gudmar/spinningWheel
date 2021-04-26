@@ -7,6 +7,8 @@ class StateHandlingAbstractComponent extends AbstractComponent{
     constructor(){
         super()
         this._getState();
+        console.log(this)
+        console.log(this._state.items)
     }
     _getState(){
         if (this._state == undefined) {

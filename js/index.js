@@ -115,7 +115,7 @@ class ManySpinningWheelsAdder{
                         <ul></ul>
                     </editing-wheel-state-list>
                 </modal-content-change-watcher>
-                <custom-button id = ${this.getButtonId(id)} data-label="Clear console"  value="show" ></custom-button>
+                <custom-button id = ${this.getButtonId(id)} data-label="Edit content"  value="show" ></custom-button>
             </div>
         `
     }

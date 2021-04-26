@@ -39,16 +39,17 @@
         <custom-button data-label="Del master mediator" id = "remove-master-mediator-button-id"  value="show" onClick="toggleMasterMediator()"></custom-button>
         <custom-button data-label="Clear console"  value="show" onClick="console.clear()"></custom-button>
     </div>
-    <div id = "wheelContainerId">
+    <div class = "top" id = "wheelContainerId">
 
     </div>
 
     <script>
         window.addEventListener('DOMContentLoaded', () => {
-            let spinnersAdder = new ManySpinningWheelsAdder(4);
+            let spinnersAdder = new ManySpinningWheelsAdder(20);
             spinnersAdder.placeAllElements('wheelContainerId');
             spinnersAdder.addMediatorsToEachWrapper()
             spinnersAdder.activateButtons();
+
             spinnersAdder.addMasterMediatorForAllMediatorObjects();
         })
 

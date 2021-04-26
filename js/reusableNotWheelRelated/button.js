@@ -63,12 +63,19 @@ class CustomButton extends AbstractComponent{
     _getTemplate(){
         return `
             <style>
+            *{
+                position: relative;
+            }
+            .button-wrapper{
+                display: inline-block
+            }
             .button{
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                position: relative;
-                height: 1.2rem;
+                // position: relative;
+                // height: 1.2rem;
+                // max-width: 100px;
                 display: flex;
                 
                 text-align: center;
@@ -94,7 +101,9 @@ class CustomButton extends AbstractComponent{
                 color: black;
             }
             </style>
-            <div class="button position-right-top" ></div>
+            <div class = "button-wrapper">
+                <div class="button position-right-top" ></div>
+            </div>
         `
     }
 }

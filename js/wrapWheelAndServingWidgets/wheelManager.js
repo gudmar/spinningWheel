@@ -140,7 +140,7 @@ class WheelControlWrapper extends StateHandlingAbstractComponent {
 
 
     _updateEachSubscriberOnThisInnerHtmlChange() {
-        let newUlDescriptor = this._getTargetsListOfDescriptors(this)
+        let newUlDescriptor = this._getTargetsListOfDescriptors(this) 
         let updateSingleSubscriber = function(id) {
             let currentElement = document.getElementById(id)
             this._changeTargetElementsUlElement(currentElement, newUlDescriptor)

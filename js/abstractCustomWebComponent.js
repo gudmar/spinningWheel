@@ -59,4 +59,12 @@ class AbstractComponent extends HTMLElement {
         return date.getDay().toString(36) + date.getHours().toString(36) + date.getMinutes().toString(36) + date.getSeconds().toString(36) + Math.random().toString(36)
     }
 
+    _stringOrBooleanToBoolean(val) {
+        let output = val
+        if (typeof(val) == 'string') {
+            output = val == "false"?false:true;
+        }  
+        return output
+    }
+
 }

@@ -111,9 +111,16 @@ class ManySpinningWheelsAdder{
             <div class = "wheel-edit-wrapper" id = ${this.getWrapperId(id)}>
                 <spinning-wheel-info id = ${this.getWheelId(id)}><ul></ul></spinning-wheel-info>
                 <modal-content-change-watcher data-visible=false id = ${this.getModalId(id)}>
+
+                    <!--
                     <editing-wheel-state-list id = ${this.getEditorId(id)}>
                         <ul></ul>
                     </editing-wheel-state-list>
+                    -->
+
+                    <editing-wheel-state-list-responsive id = ${this.getEditorId(id)}>
+                        <ul></ul>
+                    </editing-wheel-state-list-responsive>
                 </modal-content-change-watcher>
                 <custom-button id = ${this.getButtonId(id)} data-label="Edit content"  value="show" ></custom-button>
             </div>

@@ -210,7 +210,7 @@ class Modal extends AbstractComponent{
             .hidden{
                 display: none;
             }
-            @media (max-width: 750px){
+            @media (max-width: 880px){
                 .modal-body {
                     width: 90%;
                     height: 90%;
@@ -227,6 +227,13 @@ class Modal extends AbstractComponent{
                     height: calc(100% - 9rem);
                 }
             }
+            @media (max-width: 600px){
+                .modal-body {
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+
         </style>
         <div ${(this.id == undefined || this.id == null || this.id.trim() == '') ? '' : 'id=' + this.id} class = "modal-cover center">
             <div class = "modal-body column">

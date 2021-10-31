@@ -1,7 +1,13 @@
 class WheelControlWrapper extends StateHandlingAbstractComponent {
     constructor(){
         super();
-        this.supportedNodeNames = ['SPINNING-WHEEL', 'SPINNING-WHEEL-INFO', 'EDITING-WHEEL-STATE-LIST', 'WHEEL-ALIKE-COMPONENTS-MEDIATOR']
+        this.supportedNodeNames = [
+            'SPINNING-WHEEL', 
+            'SPINNING-WHEEL-INFO', 
+            'EDITING-WHEEL-STATE-LIST', 
+            'EDITING-WHEEL-STATE-LIST-RESPONSIVE', 
+            'WHEEL-ALIKE-COMPONENTS-MEDIATOR'
+        ]
     }
 
     static get observedAttributes() {
